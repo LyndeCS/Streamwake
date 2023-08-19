@@ -15,7 +15,8 @@ const client = new Client({
 	],
 });
 
-client.commands = new Collection();
+client.commands = new Collection(); // list of commands from the files in "commands" folder
+client.loggingStates = new Collection(); // track logging state for each channel
 
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs
