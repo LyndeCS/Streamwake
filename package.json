@@ -1,0 +1,35 @@
+{
+  "name": "binger",
+  "version": "1.0.0",
+  "description": "discord bot to track anime episodes watched with friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LyndeCS/binger.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "anime",
+    "episode",
+    "tracking",
+    "viewer",
+    "audit"
+  ],
+  "author": "Christopher Lynde",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LyndeCS/binger/issues"
+  },
+  "homepage": "https://github.com/LyndeCS/binger#readme",
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.47.0"
+  }
+}
