@@ -40,13 +40,24 @@ module.exports = {
 			channelStates.set(channelId, true);
 
 			// Log to a file
-			const logMessage = `${new Date().toLocaleString()}: Logging started in ${channelName}.\n`;
+			let logMessage = `${new Date().toLocaleString()}: Logging started in ${channelName}.\n`;
 			const logFilePath = path.join(
 				__dirname,
 				"..",
 				"logs",
 				`${guildName}.log`
 			);
+
+			// Get the voice channel
+			const voiceChannel = interaction.member.voice.channel;
+			if (voiceChannel) {
+				const voiceMembers = voiceChannel.members;
+
+				// Log current users in the voice channel
+				voiceMembers.forEach((member) => {
+					logMessage += `${member.user.tag} is in the channel.\n`;
+				});
+			}
 
 			// Create the "logs" directory if it doesn't exist
 			const logsDirectory = path.join(__dirname, "..", "logs");
