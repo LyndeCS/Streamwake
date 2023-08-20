@@ -1,4 +1,6 @@
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 const ownerId = process.env.OWNER_ID;
 const { SlashCommandBuilder, Collection } = require("discord.js");
 
@@ -24,6 +26,7 @@ module.exports = {
 		}
 
 		const guildId = interaction.guildId;
+		const guildName = interaction.guild.name;
 		const channelId = interaction.member.voice.channelId;
 		const channelName = interaction.member.voice.channel.name;
 
@@ -35,6 +38,25 @@ module.exports = {
 
 		if (!channelStates.has(channelId)) {
 			channelStates.set(channelId, true);
+
+			// Log to a file
+			const logMessage = `${new Date().toLocaleString()}: Logging started in ${channelName}.\n`;
+			const logFilePath = path.join(
+				__dirname,
+				"..",
+				"logs",
+				`${guildName}.log`
+			);
+
+			// Create the "logs" directory if it doesn't exist
+			const logsDirectory = path.join(__dirname, "..", "logs");
+			if (!fs.existsSync(logsDirectory)) {
+				fs.mkdirSync(logsDirectory);
+			}
+
+			// Append log message to the log file
+			fs.appendFileSync(logFilePath, logMessage);
+
 			await interaction.reply({
 				content: `Logging started in ${channelName}.`,
 				ephemeral: true,
