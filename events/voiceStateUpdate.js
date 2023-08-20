@@ -9,19 +9,29 @@ module.exports = {
 	execute(oldState, newState) {
 		// Check to see if logging is active for channel
 		const guildId = newState.guild.id;
-		const channelId = newState.channelId || oldState.channelId;
+		const newChannelId = newState.channel ? newState.channelId : null;
+		const oldChannelId = oldState.channel ? oldState.channelId : null;
 		const loggingStates = client.loggingStates;
+		let userMoved = false;
 
-		if (
-			!loggingStates.has(guildId) ||
-			!loggingStates.get(guildId).has(channelId)
-		) {
+		// Logging not active in guild
+		if (!loggingStates.has(guildId)) {
 			return;
 		}
 
 		const channelStates = client.loggingStates.get(guildId);
-		if (!channelStates.get(channelId)) {
-			return;
+
+		// User switches channels
+		if (newState.channel && oldState.channel) {
+			if (newChannelId !== oldChannelId) {
+				userMoved = true;
+			}
+			if (
+				!channelStates.get(newChannelId) &&
+				!channelStates.get(oldChannelId)
+			) {
+				return;
+			}
 		}
 
 		const user = newState.member.user.tag;
@@ -31,6 +41,7 @@ module.exports = {
 		const timestamp = new Date().toLocaleString();
 		const guildName = newState.guild.name;
 
+		// User CONNECTS TO CHANNEL
 		if (!oldState.channel && newState.channel) {
 			console.log(`${timestamp}: ${user} joined ${channel}.`);
 
@@ -51,6 +62,8 @@ module.exports = {
 
 			// Append log message to the log file
 			fs.appendFileSync(logFilePath, logMessage);
+
+			// USER DISCONNECTS FROM CHANNEL
 		} else if (oldState.channel && !newState.channel) {
 			console.log(`${timestamp}: ${user} left ${channel}.`);
 
@@ -71,6 +84,52 @@ module.exports = {
 
 			// Append log message to the log file
 			fs.appendFileSync(logFilePath, logMessage);
+		} else if (userMoved) {
+			// USER MOVED INTO CHANNEL FROM ANOTHER CHANNEL
+			if (channelStates.get(newChannelId)) {
+				console.log(`${timestamp}: ${user} moved into ${channel}.`);
+
+				// Log to a file
+				const logMessage = `${timestamp}: ${user} moved into ${channel}.\n`;
+				const logFilePath = path.join(
+					__dirname,
+					"..",
+					"logs",
+					`${guildName}.log`
+				);
+
+				// Create the "logs" directory if it doesn't exist
+				const logsDirectory = path.join(__dirname, "..", "logs");
+				if (!fs.existsSync(logsDirectory)) {
+					fs.mkdirSync(logsDirectory);
+				}
+
+				// Append log message to the log file
+				fs.appendFileSync(logFilePath, logMessage);
+			} else if (channelStates.get(oldChannelId)) {
+				// USER MOVED INTO CHANNEL FROM ANOTHER CHANNEL
+				console.log(
+					`${timestamp}: ${user} moved out of ${oldState.channel.name}.`
+				);
+
+				// Log to a file
+				const logMessage = `${timestamp}: ${user} moved out of ${channel}.\n`;
+				const logFilePath = path.join(
+					__dirname,
+					"..",
+					"logs",
+					`${guildName}.log`
+				);
+
+				// Create the "logs" directory if it doesn't exist
+				const logsDirectory = path.join(__dirname, "..", "logs");
+				if (!fs.existsSync(logsDirectory)) {
+					fs.mkdirSync(logsDirectory);
+				}
+
+				// Append log message to the log file
+				fs.appendFileSync(logFilePath, logMessage);
+			}
 		}
 	},
 };
