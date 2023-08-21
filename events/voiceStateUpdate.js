@@ -113,7 +113,7 @@ module.exports = {
 				);
 
 				// Log to a file
-				const logMessage = `${timestamp}: ${user} moved out of ${channel}.\n`;
+				const logMessage = `${timestamp}: ${user} moved out of ${oldState.channel.name}.\n`;
 				const logFilePath = path.join(
 					__dirname,
 					"..",
