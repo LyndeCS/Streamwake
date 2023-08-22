@@ -25,7 +25,7 @@ module.exports = {
 
 		// Build Buttons
 		const playButton = new ButtonBuilder()
-			.setCustomId("start")
+			.setCustomId("play")
 			// .setLabel("Play")
 			.setStyle(ButtonStyle.Success)
 			.setEmoji("<:playicon:1143415946992697414>");
@@ -36,7 +36,7 @@ module.exports = {
 			.setDisabled(true);
 		const endButton = new ButtonBuilder()
 			.setCustomId("end")
-			.setStyle(ButtonStyle.Primary)
+			.setStyle(ButtonStyle.Secondary)
 			.setEmoji("<:checkicon:1143427910510845963>")
 			.setDisabled(true);
 		const nextButton = new ButtonBuilder()
@@ -56,7 +56,7 @@ module.exports = {
 		const menu = new EmbedBuilder()
 			.setColor(0x00be92)
 			.setAuthor({
-				name: "Now playing",
+				name: "Up next",
 			})
 			.setTitle("Jujutsu Kaisen - S02E06: Pizza dogs")
 			.setURL("https://www.crunchyroll.com/")
