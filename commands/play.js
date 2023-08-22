@@ -24,8 +24,6 @@ module.exports = {
 		/*===========================
 		    PLAY BUTTON IS PRESSED
         =============================*/
-
-		// Make play button disabled
 		const receivedEmbed = interaction.message.embeds[0];
 		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({
 			name: "Now playing",
@@ -59,9 +57,12 @@ module.exports = {
 			nextButton
 		);
 
-		await interaction.reply({ components: [newActionRow], embeds: [newEmbed] });
+		// avoid replying and creating a new message
+		await interaction.deferUpdate();
 
-		// Make pause button not disabled
-		// Make stop button not disabled
+		await interaction.message.edit({
+			embeds: [newEmbed],
+			components: [newActionRow],
+		});
 	},
 };

@@ -26,7 +26,6 @@ module.exports = {
 		// Build Buttons
 		const playButton = new ButtonBuilder()
 			.setCustomId("play")
-			// .setLabel("Play")
 			.setStyle(ButtonStyle.Success)
 			.setEmoji("<:playicon:1143415946992697414>");
 		const pauseButton = new ButtonBuilder()
@@ -64,7 +63,9 @@ module.exports = {
 			.setDescription(`*"The audio is fucked btw."*`);
 		//.addFields({ name: "\u200b", value: "\u200b" });
 
-		await interaction.reply({
+		const reply = await interaction.reply("Starting binger.");
+		await reply.delete();
+		await interaction.channel.send({
 			components: [row],
 			embeds: [menu],
 		});
