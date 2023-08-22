@@ -10,24 +10,31 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("start")
-		.setDescription(
-			"Start the bot, initiating activity logging and opening menu."
-		),
+		.setName("end")
+		.setDescription("End current episode."),
 	async execute(interaction) {
+		// Command sent from non-owner
 		if (interaction.user.id !== ownerId) {
 			await interaction.reply({
-				content: "You don't have permission to use this command.",
+				content: "You do not have permission to use this command.",
 				ephemeral: true,
 			});
 			return;
 		}
+		/*===========================
+		    END BUTTON IS PRESSED
+        =============================*/
+		const receivedEmbed = interaction.message.embeds[0];
+		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({
+			name: "Finished playing",
+		});
 
-		// Build Buttons
+		const receivedActionRow = interaction.message.components[0];
 		const playButton = new ButtonBuilder()
 			.setCustomId("play")
-			.setStyle(ButtonStyle.Success)
-			.setEmoji("<:playicon:1143415946992697414>");
+			.setStyle(ButtonStyle.Secondary)
+			.setEmoji("<:playicon:1143415946992697414>")
+			.setDisabled(true);
 		const pauseButton = new ButtonBuilder()
 			.setCustomId("pause")
 			.setStyle(ButtonStyle.Secondary)
@@ -40,34 +47,22 @@ module.exports = {
 			.setDisabled(true);
 		const nextButton = new ButtonBuilder()
 			.setCustomId("next")
-			.setStyle(ButtonStyle.Secondary)
+			.setStyle(ButtonStyle.Success)
 			.setEmoji("<:nexticon:1143425125132275782>")
-			.setDisabled(true);
-
-		const row = new ActionRowBuilder().addComponents(
+			.setDisabled(false);
+		const newActionRow = ActionRowBuilder.from(receivedActionRow).setComponents(
 			playButton,
 			pauseButton,
 			endButton,
 			nextButton
 		);
 
-		// Build Embed
-		const menu = new EmbedBuilder()
-			.setColor(0x00be92)
-			.setAuthor({
-				name: "Up next",
-			})
-			.setTitle("Jujutsu Kaisen - S02E06: Pizza dogs")
-			.setURL("https://www.crunchyroll.com/")
-			.setThumbnail("https://i.imgur.com/pUaoPrt.jpg")
-			.setDescription(`*"Episode description."*`);
-		//.addFields({ name: "\u200b", value: "\u200b" });
+		// avoid replying and creating a new message
+		await interaction.deferUpdate();
 
-		const reply = await interaction.reply("Starting binger.");
-		await reply.delete();
-		await interaction.channel.send({
-			components: [row],
-			embeds: [menu],
+		await interaction.message.edit({
+			embeds: [newEmbed],
+			components: [newActionRow],
 		});
 	},
 };
