@@ -25,10 +25,22 @@ module.exports = {
 		    END BUTTON IS PRESSED
         =============================*/
 		const receivedEmbed = interaction.message.embeds[0];
-		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({
-			name: "Finished playing",
-		});
+		const newEmbed = EmbedBuilder.from(receivedEmbed)
+			.setAuthor({
+				name: "Finished playing",
+			})
+			.setFields(
+				{ name: "\u200B", value: "\u200B" },
+				{
+					name: "Up next",
+					value: `[Psycho Pass - S01E08: Spooky Boogie](https://www.crunchyroll.com/)`,
+				}
+			)
+			.setImage(
+				"https://discodracula.files.wordpress.com/2014/04/psycho-pass.jpg?w=768"
+			);
 
+		// Player button UI
 		const receivedActionRow = interaction.message.components[0];
 		const playButton = new ButtonBuilder()
 			.setCustomId("play")
