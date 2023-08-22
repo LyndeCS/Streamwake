@@ -55,7 +55,7 @@ module.exports = {
 
 				// Log current users in the voice channel
 				voiceMembers.forEach((member) => {
-					logMessage += `${member.user.tag} is in the channel.\n`;
+					logMessage += `${member.user.tag} is present.\n`;
 				});
 			}
 

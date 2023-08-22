@@ -35,18 +35,13 @@ module.exports = {
 		}
 
 		const user = newState.member.user.tag;
-		const channel = newState.channel
-			? newState.channel.name
-			: oldState.channel.name;
 		const timestamp = new Date().toLocaleString();
 		const guildName = newState.guild.name;
 
 		// User CONNECTS TO CHANNEL
 		if (!oldState.channel && newState.channel) {
-			console.log(`${timestamp}: ${user} joined ${channel}.`);
-
 			// Log to a file
-			const logMessage = `${timestamp}: ${user} joined ${channel}.\n`;
+			const logMessage = `${timestamp}: ${user} joined.\n`;
 			const logFilePath = path.join(
 				__dirname,
 				"..",
@@ -65,10 +60,8 @@ module.exports = {
 
 			// USER DISCONNECTS FROM CHANNEL
 		} else if (oldState.channel && !newState.channel) {
-			console.log(`${timestamp}: ${user} left ${channel}.`);
-
 			// Log to a file
-			const logMessage = `${timestamp}: ${user} left ${channel}.\n`;
+			const logMessage = `${timestamp}: ${user} left.\n`;
 			const logFilePath = path.join(
 				__dirname,
 				"..",
@@ -87,10 +80,8 @@ module.exports = {
 		} else if (userMoved) {
 			// USER MOVED INTO CHANNEL FROM ANOTHER CHANNEL
 			if (channelStates.get(newChannelId)) {
-				console.log(`${timestamp}: ${user} moved into ${channel}.`);
-
 				// Log to a file
-				const logMessage = `${timestamp}: ${user} moved into ${channel}.\n`;
+				const logMessage = `${timestamp}: ${user} joined.\n`;
 				const logFilePath = path.join(
 					__dirname,
 					"..",
@@ -108,12 +99,9 @@ module.exports = {
 				fs.appendFileSync(logFilePath, logMessage);
 			} else if (channelStates.get(oldChannelId)) {
 				// USER MOVED INTO CHANNEL FROM ANOTHER CHANNEL
-				console.log(
-					`${timestamp}: ${user} moved out of ${oldState.channel.name}.`
-				);
 
 				// Log to a file
-				const logMessage = `${timestamp}: ${user} moved out of ${oldState.channel.name}.\n`;
+				const logMessage = `${timestamp}: ${user} left.\n`;
 				const logFilePath = path.join(
 					__dirname,
 					"..",
