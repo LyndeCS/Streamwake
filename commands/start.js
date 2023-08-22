@@ -4,6 +4,7 @@ const {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	EmbedBuilder,
 	SlashCommandBuilder,
 } = require("discord.js");
 
@@ -22,24 +23,50 @@ module.exports = {
 			return;
 		}
 
-		// Bot Menu
-		const startEpButton = new ButtonBuilder()
-			.setCustomId("Start Ep.")
-			.setLabel("Start Episode")
-			.setStyle(ButtonStyle.Success);
-		const endEpButton = new ButtonBuilder()
-			.setCustomId("End Ep.")
-			.setLabel("End Episode")
-			.setStyle(ButtonStyle.Danger);
+		// Build Buttons
+		const playButton = new ButtonBuilder()
+			.setCustomId("start")
+			// .setLabel("Play")
+			.setStyle(ButtonStyle.Success)
+			.setEmoji("<:playicon:1143415946992697414>");
+		const pauseButton = new ButtonBuilder()
+			.setCustomId("pause")
+			.setStyle(ButtonStyle.Secondary)
+			.setEmoji("<:pauseicon:1143423347091308574>")
+			.setDisabled(true);
+		const endButton = new ButtonBuilder()
+			.setCustomId("end")
+			.setStyle(ButtonStyle.Primary)
+			.setEmoji("<:checkicon:1143427910510845963>")
+			.setDisabled(true);
+		const nextButton = new ButtonBuilder()
+			.setCustomId("next")
+			.setStyle(ButtonStyle.Secondary)
+			.setEmoji("<:nexticon:1143425125132275782>")
+			.setDisabled(true);
 
 		const row = new ActionRowBuilder().addComponents(
-			startEpButton,
-			endEpButton
+			playButton,
+			pauseButton,
+			endButton,
+			nextButton
 		);
 
+		// Build Embed
+		const menu = new EmbedBuilder()
+			.setColor(0x00be92)
+			.setAuthor({
+				name: "Now playing",
+			})
+			.setTitle("Jujutsu Kaisen - S02E06: Pizza dogs")
+			.setURL("https://www.crunchyroll.com/")
+			.setThumbnail("https://i.imgur.com/pUaoPrt.jpg")
+			.setDescription(`*"The audio is fucked btw."*`);
+		//.addFields({ name: "\u200b", value: "\u200b" });
+
 		await interaction.reply({
-			content: "Binger Bot",
 			components: [row],
+			embeds: [menu],
 		});
 	},
 };
