@@ -17,6 +17,7 @@ class ClientManager {
 
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();
+		this.client.watchList = new Collection();
 
 		this.loadCommands();
 	}
