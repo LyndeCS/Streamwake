@@ -18,8 +18,12 @@ class ClientManager {
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();
 		this.client.watchList = new Collection();
-
-		this.loadCommands();
+		this.client.recentShows = [
+			"Jujutsu Kaisen",
+			"Psycho Pass",
+			"Reborn as a Vending Machine, I Now Wander the Dungeon",
+			"God of Highschool",
+		];
 	}
 
 	async login(token) {

@@ -36,6 +36,9 @@ module.exports = {
 			await client.commands.get(interaction.customId).execute(interaction);
 		} else if (interaction.isStringSelectMenu()) {
 			// Menu option is selected
+			if (interaction.customId === "showselection") {
+				await client.commands.get("selectshow").execute(interaction);
+			}
 		}
 	},
 };

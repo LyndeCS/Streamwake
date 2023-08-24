@@ -22,28 +22,6 @@ module.exports = {
 			});
 			return;
 		}
-		// Build Watchlist UI
-		// Dropdown for episode selection
-		// -> Fill dropdown with currently watched animes
-
-		// Example string menu builder
-		// const select = new StringSelectMenuBuilder()
-		// 	.setCustomId("show")
-		// 	.setPlaceholder("Select a show")
-		// 	.addOptions(
-		// 		new StringSelectMenuOptionBuilder()
-		// 			.setLabel("Bulbasaur")
-		// 			.setDescription("The dual-type Grass/Poison Seed Pokémon.")
-		// 			.setValue("bulbasaur"),
-		// 		new StringSelectMenuOptionBuilder()
-		// 			.setLabel("Charmander")
-		// 			.setDescription("The Fire-type Lizard Pokémon.")
-		// 			.setValue("charmander"),
-		// 		new StringSelectMenuOptionBuilder()
-		// 			.setLabel("Squirtle")
-		// 			.setDescription("The Water-type Tiny Turtle Pokémon.")
-		// 			.setValue("squirtle")
-		// 	);
 
 		// Build Embed
 		const watchList = new EmbedBuilder()
@@ -58,7 +36,7 @@ module.exports = {
 
 		// Build Buttons
 		const addButton = new ButtonBuilder()
-			.setCustomId("addShow")
+			.setCustomId("addshow")
 			.setStyle(ButtonStyle.Success)
 			.setEmoji("➕");
 
