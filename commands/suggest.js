@@ -16,11 +16,11 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("sgtemp")
+		.setName("sg")
 		.setDescription("Suggest a show to add to the suggestion list.")
 		.addStringOption((option) =>
 			option
-				.setName("suggestedshow")
+				.setName("suggested_show")
 				.setDescription(
 					"Name of show you would like to add to suggestion list."
 				)
@@ -36,7 +36,7 @@ module.exports = {
 		}
 
 		// showname string is sent via /sg command
-		const suggestedShow = interaction.options.getString("suggestedshow");
+		const suggestedShow = interaction.options.getString("suggested_show");
 
 		client.suggestedShowsList.push(suggestedShow);
 

@@ -18,7 +18,7 @@ class ClientManager {
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();
 		this.client.watchList = [];
-		this.client.suggestedShowsList = ["warrio99"];
+		this.client.suggestedShowsList = [];
 		this.client.recentShows = [
 			"Jujutsu Kaisen",
 			"Psycho Pass",
@@ -26,7 +26,6 @@ class ClientManager {
 			"God of Highschool",
 		];
 		this.client.embeds = new Collection();
-		// this.client.suggestedShowsEmbedMsg = "";
 	}
 
 	async login(token) {

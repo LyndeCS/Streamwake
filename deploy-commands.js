@@ -40,10 +40,16 @@ const rest = new REST().setToken(token);
 			// Guild specific commands update
 			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: commands }
+			//Reset Guild specific commands
+			// Routes.applicationGuildCommands(clientId, guildId),
+			// { body: [] }
 
 			// Global commands update
 			// Routes.applicationCommands(clientId),
 			// { body: commands }
+			// Reset Global commands
+			// Routes.applicationCommands(clientId),
+			// { body: [] }
 		);
 
 		console.log(
