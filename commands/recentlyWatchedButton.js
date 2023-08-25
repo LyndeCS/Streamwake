@@ -2,6 +2,8 @@ require("dotenv").config();
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
 const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 const {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
@@ -14,20 +16,20 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("addshow")
-		.setDescription("Add a show to the watch list."),
+		.setName("recentlywatchedbutton")
+		.setDescription("Open drop-down menu of recently watched shows."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (interaction.user.id !== ownerId) {
+		if (!interaction.user.id in admins) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,
 			});
 			return;
 		}
-		/*===========================
-	      ADD SHOW BUTTON IS PRESSED
-        =============================*/
+		/*==================================
+	      RECENTLY WATCHED BUTTON IS PRESSED
+        ====================================*/
 
 		// Build Drop Down Menu
 		const recentlyWatchedMenu = new StringSelectMenuBuilder()

@@ -17,13 +17,16 @@ class ClientManager {
 
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();
-		this.client.watchList = new Collection();
+		this.client.watchList = [];
+		this.client.suggestedShowsList = ["warrio99"];
 		this.client.recentShows = [
 			"Jujutsu Kaisen",
 			"Psycho Pass",
 			"Reborn as a Vending Machine, I Now Wander the Dungeon",
 			"God of Highschool",
 		];
+		this.client.embeds = new Collection();
+		// this.client.suggestedShowsEmbedMsg = "";
 	}
 
 	async login(token) {

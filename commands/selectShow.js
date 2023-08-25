@@ -2,6 +2,8 @@ require("dotenv").config();
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
 const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 const {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
@@ -18,7 +20,7 @@ module.exports = {
 		.setDescription("Select show from dropdown menu to add to watch list."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (interaction.user.id !== ownerId) {
+		if (!interaction.user.id in admins) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,
@@ -29,21 +31,31 @@ module.exports = {
 	      SHOW SELECTED FROM DROPDOWN
         =============================*/
 
-		// update embed with selected show
-		// Build Embed
+		// Update embed with selected show
 		const receivedEmbed = interaction.message.embeds[0];
-		const newEmbed = EmbedBuilder.from(receivedEmbed).addFields({
-			name: interaction.values[0],
-			value: "S01E02 - Rolling Thunder",
-		});
+		const addedShow = interaction.values[0];
+		client.watchList.push(addedShow);
+		const newEmbed = EmbedBuilder.from(receivedEmbed)
+			.setDescription("\u200B")
+			.addFields({
+				name: addedShow,
+				value: "S01E02 - Pizza Dogs",
+			});
 
 		// Build Buttons
-		const addButton = new ButtonBuilder()
-			.setCustomId("addshow")
-			.setStyle(ButtonStyle.Success)
-			.setEmoji("➕");
+		const recentlyWatchedButton = new ButtonBuilder()
+			.setLabel("Recently watched")
+			.setCustomId("recentlywatchedbutton")
+			.setStyle(ButtonStyle.Success);
+		const suggestionsButton = new ButtonBuilder()
+			.setLabel("Suggestions")
+			.setCustomId("suggestionsbutton")
+			.setStyle(ButtonStyle.Primary);
 
-		const buttonRow = new ActionRowBuilder().addComponents(addButton);
+		const buttonRow = new ActionRowBuilder().addComponents(
+			recentlyWatchedButton,
+			suggestionsButton
+		);
 
 		await interaction.deferUpdate();
 		await interaction.message.edit({
