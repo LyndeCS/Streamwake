@@ -43,7 +43,7 @@ module.exports = {
 
 		// Build Suggestions Drop Down Menu
 		const suggestionsMenu = new StringSelectMenuBuilder()
-			.setCustomId("showselection")
+			.setCustomId("selectSuggestedShow")
 			.setPlaceholder("Select a show");
 		const suggestedShows = client.suggestedShowsList;
 		for (let i = 0; i < suggestedShows.length; i++) {

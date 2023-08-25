@@ -33,7 +33,7 @@ module.exports = {
 
 		// Build Drop Down Menu
 		const recentlyWatchedMenu = new StringSelectMenuBuilder()
-			.setCustomId("showselection")
+			.setCustomId("selectRecentShow")
 			.setPlaceholder("Select a show");
 		for (let i = 0; i < client.recentShows.length; i++) {
 			recentlyWatchedMenu.addOptions(

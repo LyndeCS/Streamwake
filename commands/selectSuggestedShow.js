@@ -16,7 +16,7 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("selectshow")
+		.setName("selectsuggestedshow")
 		.setDescription("Select show from dropdown menu to add to watch list."),
 	async execute(interaction) {
 		// Command sent from non-owner
@@ -58,9 +58,16 @@ module.exports = {
 		);
 
 		await interaction.deferUpdate();
-		await interaction.message.edit({
-			embeds: [newEmbed],
-			components: [buttonRow],
-		});
+		await interaction.message
+			.edit({
+				embeds: [newEmbed],
+				components: [buttonRow],
+			})
+			.then((msg) => {
+				const index = client.suggestedShowsList.indexOf(addedShow);
+				if (index > -1) {
+					client.suggestedShowsList.splice(index, 1);
+				}
+			});
 	},
 };
