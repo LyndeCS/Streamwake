@@ -42,12 +42,12 @@ module.exports = {
 					.setValue(client.recentShows[i])
 			);
 		}
-
+		const receivedActionRow = interaction.message.components[0];
 		const menuRow = new ActionRowBuilder().addComponents(recentlyWatchedMenu);
 
 		await interaction.deferUpdate();
 		await interaction.message.edit({
-			components: [menuRow],
+			components: [receivedActionRow, menuRow],
 		});
 	},
 };

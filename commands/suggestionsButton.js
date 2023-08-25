@@ -54,11 +54,12 @@ module.exports = {
 			);
 		}
 
+		const receivedActionRow = interaction.message.components[0];
 		const menuRow = new ActionRowBuilder().addComponents(suggestionsMenu);
 
 		await interaction.deferUpdate();
 		await interaction.message.edit({
-			components: [menuRow],
+			components: [receivedActionRow, menuRow],
 		});
 	},
 };
