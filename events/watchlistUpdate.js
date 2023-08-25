@@ -3,18 +3,18 @@ const client = clientManager.getClient();
 const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
-	name: "suggestionsUpdate",
+	name: "watchlistUpdate",
 	async execute(client) {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
-			const [embed, msg] = client.embeds.get("suggestedShowsEmbedStruct");
+			const [embed, msg] = client.embeds.get("watchlistEmbedStruct");
 			const descHeader = `----------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
-			let desc = client.suggestedShowsList.length
+			let desc = client.watchList.length
 				? descHeader
 				: descHeader + emptyHeader;
-			for (let i = 0; i < client.suggestedShowsList.length; i++) {
-				desc += client.suggestedShowsList[i] + "\n";
+			for (let i = 0; i < client.watchList.length; i++) {
+				desc += client.watchList[i] + "\n";
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 
@@ -23,7 +23,7 @@ module.exports = {
 					embeds: [newEmbed],
 				})
 				.then((msg) => {
-					client.embeds.set("suggestedShowsEmbedStruct", [newEmbed, msg]);
+					client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
 				});
 		}
 	},

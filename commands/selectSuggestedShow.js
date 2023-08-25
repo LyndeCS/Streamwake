@@ -64,11 +64,7 @@ module.exports = {
 				const index = client.suggestedShowsList.indexOf(addedShow);
 				if (index > -1) {
 					client.suggestedShowsList.splice(index, 1);
-					//redraw suggestions embed
-					const suggestedShowsEmbedStruct = client.embeds.get(
-						"suggestedShowsEmbedStruct"
-					);
-					console.log(suggestedShowsEmbedStruct[0]);
+					client.emit("suggestionsUpdate");
 				}
 			});
 	},
