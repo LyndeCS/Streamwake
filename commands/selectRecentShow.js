@@ -35,13 +35,9 @@ module.exports = {
 		const receivedEmbed = interaction.message.embeds[0];
 		const addedShow = interaction.values[0];
 		client.watchList.push(addedShow);
-		console.log(interaction);
-		const newEmbed = EmbedBuilder.from(receivedEmbed)
-			.setDescription("\u200B")
-			.addFields({
-				name: addedShow,
-				value: "S01E02 - Pizza Dogs",
-			});
+		const newEmbed = EmbedBuilder.from(receivedEmbed).setDescription(
+			`${receivedEmbed.description}\n${addedShow}`
+		);
 
 		// Build Buttons
 		const recentlyWatchedButton = new ButtonBuilder()

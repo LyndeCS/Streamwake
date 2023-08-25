@@ -35,12 +35,9 @@ module.exports = {
 		const receivedEmbed = interaction.message.embeds[0];
 		const addedShow = interaction.values[0];
 		client.watchList.push(addedShow);
-		const newEmbed = EmbedBuilder.from(receivedEmbed)
-			.setDescription("\u200B")
-			.addFields({
-				name: addedShow,
-				value: "S01E02 - Pizza Dogs",
-			});
+		const newEmbed = EmbedBuilder.from(receivedEmbed).setDescription(
+			`${receivedEmbed.description}\n${addedShow}`
+		);
 
 		// Build Buttons
 		const recentlyWatchedButton = new ButtonBuilder()
@@ -67,6 +64,11 @@ module.exports = {
 				const index = client.suggestedShowsList.indexOf(addedShow);
 				if (index > -1) {
 					client.suggestedShowsList.splice(index, 1);
+					//redraw suggestions embed
+					const suggestedShowsEmbedStruct = client.embeds.get(
+						"suggestedShowsEmbedStruct"
+					);
+					console.log(suggestedShowsEmbedStruct[0]);
 				}
 			});
 	},
