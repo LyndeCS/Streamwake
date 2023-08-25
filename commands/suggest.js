@@ -43,19 +43,22 @@ module.exports = {
 		const reply = await interaction.reply("suggesting");
 		reply.delete();
 
-		const suggestedShowsEmbedStruct = client.embeds.get(
-			"suggestedShowsEmbedStruct"
-		);
-		const suggestedShowsEmbed = suggestedShowsEmbedStruct[0];
-		const newEmbed = EmbedBuilder.from(suggestedShowsEmbed)
-			.setDescription("\u200B")
-			.addFields({
-				name: suggestedShow,
-				value: "S01E02 - Pizza Dogs",
+		// Only build embed if watchlist is currently displaying
+		if (client.appStates.get("wl")) {
+			const suggestedShowsEmbedStruct = client.embeds.get(
+				"suggestedShowsEmbedStruct"
+			);
+			const suggestedShowsEmbed = suggestedShowsEmbedStruct[0];
+			const newEmbed = EmbedBuilder.from(suggestedShowsEmbed)
+				.setDescription("\u200B")
+				.addFields({
+					name: suggestedShow,
+					value: "S01E02 - Pizza Dogs",
+				});
+			const suggestedShowsEmbedMsg = suggestedShowsEmbedStruct[1];
+			await suggestedShowsEmbedMsg.edit({
+				embeds: [newEmbed],
 			});
-		const suggestedShowsEmbedMsg = suggestedShowsEmbedStruct[1];
-		await suggestedShowsEmbedMsg.edit({
-			embeds: [newEmbed],
-		});
+		}
 	},
 };

@@ -26,6 +26,8 @@ class ClientManager {
 			"God of Highschool",
 		];
 		this.client.embeds = new Collection();
+		this.client.appStates = new Collection().set("wl", false);
+		// this.client.appStates.set("wl", false);
 	}
 
 	async login(token) {

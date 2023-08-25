@@ -105,6 +105,7 @@ module.exports = {
 			suggestionEmbed,
 			suggestionEmbedMsg,
 		]);
-		// client.suggestedShowsEmbedMsg = suggestionEmbedMsg;
+
+		client.appStates.set("wl", true);
 	},
 };
