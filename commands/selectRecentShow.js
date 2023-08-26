@@ -31,10 +31,6 @@ module.exports = {
 	      SHOW SELECTED FROM DROPDOWN
         =============================*/
 
-		// Update embed with selected show
-		const addedShow = interaction.values[0];
-		client.watchList.push(addedShow);
-
 		// Build Buttons
 		const recentlyWatchedButton = new ButtonBuilder()
 			.setLabel("Recently watched")
@@ -50,11 +46,17 @@ module.exports = {
 			suggestionsButton
 		);
 
+		// Update embed with selected show
+		const addedShow = interaction.values[0];
+		client.watchList.push(addedShow);
+
 		await interaction.deferUpdate();
-		client.emit("watchlistUpdate", buttonRow);
-		const index = client.recentShowsList.indexOf(addedShow);
-		if (index > -1) {
-			client.recentShowsList.splice(index, 1);
-		}
+		client.emit("watchlistUpdate", buttonRow, true);
+		const index = client.recentShowsList.findIndex(
+			(show) => show.showName === addedShow
+		);
+		// if (index > -1) {
+		// 	client.recentShowsList.splice(index, 1);
+		// }
 	},
 };

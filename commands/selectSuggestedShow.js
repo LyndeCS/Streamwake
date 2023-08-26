@@ -50,7 +50,7 @@ module.exports = {
 		);
 
 		await interaction.deferUpdate();
-		client.emit("watchlistUpdate", buttonRow);
+		client.emit("watchlistUpdate", buttonRow, false);
 		const index = client.suggestedShowsList.indexOf(addedShow);
 		if (index > -1) {
 			client.suggestedShowsList.splice(index, 1);

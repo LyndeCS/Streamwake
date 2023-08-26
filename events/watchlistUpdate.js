@@ -4,7 +4,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	name: "watchlistUpdate",
-	async execute(buttonRow) {
+	async execute(buttonRow, recent) {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
 			const wlStruct = client.embeds.get("watchlistEmbedStruct");
@@ -16,7 +16,19 @@ module.exports = {
 				? descHeader
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.watchList.length; i++) {
-				desc += `${i}. **__${client.watchList[i]}__** - *S01E01*\n`;
+				const currShow = client.watchList[i];
+				if (recent) {
+					const foundShow = client.recentShowsList.find(
+						(show) => show.showName === currShow
+					);
+					console.log(currShow);
+					console.log(foundShow);
+					desc += `${i}. **__${currShow}__** - *S0${foundShow.season}E0${
+						foundShow.episode + 1
+					}*\n`;
+				} else {
+					desc += `${i}. **__${currShow}__** - *S01E01*\n`;
+				}
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

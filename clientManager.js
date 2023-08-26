@@ -20,10 +20,28 @@ class ClientManager {
 		this.client.watchList = [];
 		this.client.suggestedShowsList = [];
 		this.client.recentShowsList = [
-			"Jujutsu Kaisen",
-			"Psycho Pass",
-			"Reborn as a Vending Machine, I Now Wander the Dungeon",
-			"God of Highschool",
+			{ showName: "Jujutsu Kaisen", season: 2, episode: 5 },
+			{ showName: "Psycho-Pass", season: 1, episode: 8 },
+			{
+				showName: "Reborn as a Vending Machine, I Now Wander the Dungeon",
+				season: 1,
+				episode: 7,
+			},
+			{ showName: "God of Highschool", season: 1, episode: 2 },
+			{ showName: "Hinamatsuri", season: 1, episode: 8 },
+			{ showName: "Eighty-Six", season: 1, episode: 4 },
+			{ showName: "Zom 100: Bucket List of the Dead", season: 1, episode: 4 },
+			{ showName: "Mob Psycho 100", season: 1, episode: 1 },
+			{ showName: "Death Parade", season: 1, episode: 7 },
+			{ showName: "Link Click", season: 1, episode: 8 },
+			{
+				showName: "My Unique Skill Makes Me OP Even at Level 1",
+				season: 1,
+				episode: 1,
+			},
+			{ showName: "ID: Invaded", season: 1, episode: 7 },
+			{ showName: "Erased", season: 1, episode: 1 },
+			{ showName: "Great Pretender", season: 1, episode: 1 },
 		];
 		this.client.embeds = new Collection();
 		this.client.appStates = new Collection().set("wl", false);

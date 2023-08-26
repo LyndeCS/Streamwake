@@ -38,8 +38,8 @@ module.exports = {
 		for (let i = 0; i < client.recentShowsList.length; i++) {
 			recentlyWatchedMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(client.recentShowsList[i])
-					.setValue(client.recentShowsList[i])
+					.setLabel(client.recentShowsList[i]["showName"])
+					.setValue(client.recentShowsList[i]["showName"])
 			);
 		}
 		const receivedActionRow = interaction.message.components[0];
