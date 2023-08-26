@@ -7,14 +7,18 @@ module.exports = {
 	async execute() {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
-			const [embed, msg] = client.embeds.get("suggestedShowsEmbedStruct");
+			const wlStruct = client.embeds.get("suggestedShowsEmbedStruct");
+			const embed = wlStruct[0];
+			const msg = wlStruct[1];
 			const descHeader = `----------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.suggestedShowsList.length
 				? descHeader
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.suggestedShowsList.length; i++) {
-				desc += client.suggestedShowsList[i]["showName"] + "\n";
+				desc += `${i + 1}. **__${
+					client.suggestedShowsList[i]["showName"]
+				}__**\n`;
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

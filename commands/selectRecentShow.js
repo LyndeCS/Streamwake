@@ -5,12 +5,9 @@ const ownerId = process.env.OWNER_ID;
 const adminId = process.env.ADMIN_ID;
 const admins = [ownerId, adminId];
 const {
-	StringSelectMenuBuilder,
-	StringSelectMenuOptionBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	EmbedBuilder,
 	SlashCommandBuilder,
 } = require("discord.js");
 

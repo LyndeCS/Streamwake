@@ -7,32 +7,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("r")
 		.setDescription("Remove a show from watchlist/suggestions.")
-		// .addSubcommand((subcommand) =>
-		// 	subcommand
-		// 		.setName("targetlist")
-		// 		.setDescription("Target list to remove from (wl/sl)")
-		// 		.addStringOption((option) =>
-		// 			option
-		// 				.setName("list")
-		// 				.setDescription("The target list")
-		// 				.setRequired(true)
-		// 				.addChoices(
-		// 					{ name: "wl", value: "wl" },
-		// 					{ name: "sl", value: "sl" }
-		// 				)
-		// 		)
-		// )
-		// .addSubcommand((subcommand) =>
-		// 	subcommand
-		// 		.setName("position")
-		// 		.setDescription("Number on the list of show to remove")
-		// 		.addIntegerOption((option) =>
-		// 			option
-		// 				.setName("value")
-		// 				.setDescription("Value of number to remove")
-		// 				.setRequired(true)
-		// 		)
-		// ),
 		.addStringOption((option) =>
 			option
 				.setName("list")
@@ -47,13 +21,57 @@ module.exports = {
 				.setRequired(true)
 		),
 	async execute(interaction) {
+		// Command sent from non-owner
+		if (!admins.includes(interaction.user.id)) {
+			await interaction.reply({
+				content: "You do not have permission to use this command.",
+				ephemeral: true,
+			});
+			return;
+		}
 		// showname string is sent via /sg command
 		const list = interaction.options.getString("list");
-		const pos = interaction.options.getInteger("position");
+		const pos = interaction.options.getInteger("position") - 1;
 
-		await interaction.reply({
-			content: `${list}: ${pos}`,
-			ephemeral: true,
-		});
+		// remove show from watchlist
+		if (list === "wl") {
+			// ensure watch list has corresponding element to value entered by user
+			if (client.watchList.length > 0 && client.watchList.length > pos) {
+				const removedShowName = client.watchList[pos]["showName"];
+				client.watchList.splice(pos, 1);
+				// if watchlist is active, update embed
+				// if watchlist is inactive, send reply notifying user of succesful removal
+				client.appStates.get("wl")
+					? client.emit("watchlistUpdate")
+					: await interaction.reply({
+							content: `Removed ${removedShowName}.`,
+							ephemeral: true,
+					  });
+				// user entered invalid position to remove
+			} else {
+				await interaction.reply({
+					content: `Invalid position entered.`,
+					ephemeral: true,
+				});
+			}
+			// remove show from suggestions
+		} else {
+			// ensure suggestions list has corresponding element to value entered by user
+			if (
+				client.suggestedShowsList.length > 0 &&
+				client.suggestedShowsList.length > pos
+			) {
+				const removedShowName = client.suggestedShowsList[pos]["showName"];
+				client.suggestedShowsList.splice(pos, 1);
+				client.appStates.get("wl")
+					? // if watchlist is active, update embed
+					  // if watchlist is inactive, send reply notifying user of succesful removal
+					  client.emit("suggestionsUpdate")
+					: await interaction.reply({
+							content: `Removed ${removedShowName}.`,
+							ephemeral: true,
+					  });
+			}
+		}
 	},
 };
