@@ -10,7 +10,7 @@ module.exports = {
 			const wlStruct = client.embeds.get("suggestedShowsEmbedStruct");
 			const embed = wlStruct[0];
 			const msg = wlStruct[1];
-			const descHeader = `----------------------------------------------------------\n`;
+			const descHeader = `--------------------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.suggestedShowsList.length
 				? descHeader
