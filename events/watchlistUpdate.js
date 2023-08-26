@@ -10,7 +10,7 @@ module.exports = {
 			const wlStruct = client.embeds.get("watchlistEmbedStruct");
 			const embed = wlStruct[0];
 			const msg = wlStruct[1];
-			const descHeader = `----------------------------------------------------------\n`;
+			const descHeader = `--------------------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.watchList.length
 				? descHeader

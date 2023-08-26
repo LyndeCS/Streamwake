@@ -34,7 +34,7 @@ module.exports = {
 			.setColor(0x00be92)
 			.setTitle(`Watch List`)
 			.setDescription(
-				`----------------------------------------------------------\n
+				`--------------------------------------------------------------------\n
 				Currently empty.`
 			)
 			.setThumbnail("https://i.imgur.com/xyfMF0v.png");
@@ -64,7 +64,7 @@ module.exports = {
 			.setColor(0x00be92)
 			.setTitle(`Suggestions`)
 			.setDescription(
-				`----------------------------------------------------------\n
+				`--------------------------------------------------------------------\n
 			Currently empty.`
 			)
 			.setThumbnail("https://i.imgur.com/SZJ5qq1.png")
