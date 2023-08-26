@@ -8,9 +8,6 @@ const {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	EmbedBuilder,
 	SlashCommandBuilder,
 } = require("discord.js");
 
@@ -35,11 +32,11 @@ module.exports = {
 		const recentlyWatchedMenu = new StringSelectMenuBuilder()
 			.setCustomId("selectRecentShow")
 			.setPlaceholder("Select a show");
-		for (let i = 0; i < client.recentShowsList.length; i++) {
+		for (let i = 0; i < client.recentShowsDropdownList.length; i++) {
 			recentlyWatchedMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(client.recentShowsList[i]["showName"])
-					.setValue(client.recentShowsList[i]["showName"])
+					.setLabel(client.recentShowsDropdownList[i]["showName"])
+					.setValue(client.recentShowsDropdownList[i]["showName"])
 			);
 		}
 		const receivedActionRow = interaction.message.components[0];

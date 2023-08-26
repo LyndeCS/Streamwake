@@ -32,7 +32,10 @@ module.exports = {
         =============================*/
 
 		// Update embed with selected show
-		const addedShow = interaction.values[0];
+		const addedShow = client.suggestedShowsList.find(
+			(show) => show.showName === interaction.values[0]
+		);
+		addedShow.recent = false;
 		client.watchList.push(addedShow);
 
 		// Build Buttons
@@ -50,8 +53,10 @@ module.exports = {
 		);
 
 		await interaction.deferUpdate();
-		client.emit("watchlistUpdate", buttonRow, false);
-		const index = client.suggestedShowsList.indexOf(addedShow);
+		client.emit("watchlistUpdate", buttonRow);
+		const index = client.suggestedShowsList.findIndex(
+			(show) => show.showName === addedShow.showName
+		);
 		if (index > -1) {
 			client.suggestedShowsList.splice(index, 1);
 			client.emit("suggestionsUpdate");

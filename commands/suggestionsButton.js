@@ -49,8 +49,8 @@ module.exports = {
 		for (let i = 0; i < suggestedShows.length; i++) {
 			suggestionsMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(suggestedShows[i])
-					.setValue(suggestedShows[i])
+					.setLabel(suggestedShows[i]["showName"])
+					.setValue(suggestedShows[i]["showName"])
 			);
 		}
 

@@ -19,7 +19,11 @@ module.exports = {
 		// showname string is sent via /sg command
 		const suggestedShow = interaction.options.getString("suggested_show");
 
-		client.suggestedShowsList.push(suggestedShow);
+		client.suggestedShowsList.push({
+			showName: suggestedShow,
+			season: 1,
+			episode: 1,
+		});
 
 		const reply = await interaction.reply({
 			content: "suggesting",

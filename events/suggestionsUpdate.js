@@ -14,7 +14,7 @@ module.exports = {
 				? descHeader
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.suggestedShowsList.length; i++) {
-				desc += client.suggestedShowsList[i] + "\n";
+				desc += client.suggestedShowsList[i]["showName"] + "\n";
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

@@ -43,6 +43,7 @@ class ClientManager {
 			{ showName: "Erased", season: 1, episode: 1 },
 			{ showName: "Great Pretender", season: 1, episode: 1 },
 		];
+		this.client.recentShowsDropdownList = [...this.client.recentShowsList];
 		this.client.embeds = new Collection();
 		this.client.appStates = new Collection().set("wl", false);
 	}

@@ -47,16 +47,19 @@ module.exports = {
 		);
 
 		// Update embed with selected show
-		const addedShow = interaction.values[0];
+		const addedShow = client.recentShowsList.find(
+			(show) => show.showName === interaction.values[0]
+		);
+		addedShow.recent = true;
 		client.watchList.push(addedShow);
 
 		await interaction.deferUpdate();
-		client.emit("watchlistUpdate", buttonRow, true);
-		const index = client.recentShowsList.findIndex(
-			(show) => show.showName === addedShow
+		client.emit("watchlistUpdate", buttonRow);
+		const index = client.recentShowsDropdownList.findIndex(
+			(show) => show.showName === addedShow.showName
 		);
-		// if (index > -1) {
-		// 	client.recentShowsList.splice(index, 1);
-		// }
+		if (index > -1) {
+			client.recentShowsDropdownList.splice(index, 1);
+		}
 	},
 };
