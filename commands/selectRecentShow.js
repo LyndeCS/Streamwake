@@ -20,7 +20,7 @@ module.exports = {
 		.setDescription("Select show from dropdown menu to add to watch list."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (!interaction.user.id in admins) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,

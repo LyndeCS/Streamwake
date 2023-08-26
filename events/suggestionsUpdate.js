@@ -4,7 +4,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	name: "suggestionsUpdate",
-	async execute(client) {
+	async execute() {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
 			const [embed, msg] = client.embeds.get("suggestedShowsEmbedStruct");

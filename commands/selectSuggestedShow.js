@@ -20,7 +20,7 @@ module.exports = {
 		.setDescription("Select show from dropdown menu to add to watch list."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (!interaction.user.id in admins) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,
@@ -32,12 +32,8 @@ module.exports = {
         =============================*/
 
 		// Update embed with selected show
-		const receivedEmbed = interaction.message.embeds[0];
 		const addedShow = interaction.values[0];
 		client.watchList.push(addedShow);
-		const newEmbed = EmbedBuilder.from(receivedEmbed).setDescription(
-			`${receivedEmbed.description}\n${addedShow}`
-		);
 
 		// Build Buttons
 		const recentlyWatchedButton = new ButtonBuilder()
@@ -48,24 +44,17 @@ module.exports = {
 			.setLabel("Suggestions")
 			.setCustomId("suggestionsbutton")
 			.setStyle(ButtonStyle.Primary);
-
 		const buttonRow = new ActionRowBuilder().addComponents(
 			recentlyWatchedButton,
 			suggestionsButton
 		);
 
 		await interaction.deferUpdate();
-		await interaction.message
-			.edit({
-				embeds: [newEmbed],
-				components: [buttonRow],
-			})
-			.then((msg) => {
-				const index = client.suggestedShowsList.indexOf(addedShow);
-				if (index > -1) {
-					client.suggestedShowsList.splice(index, 1);
-					client.emit("suggestionsUpdate");
-				}
-			});
+		client.emit("watchlistUpdate", buttonRow);
+		const index = client.suggestedShowsList.indexOf(addedShow);
+		if (index > -1) {
+			client.suggestedShowsList.splice(index, 1);
+			client.emit("suggestionsUpdate");
+		}
 	},
 };

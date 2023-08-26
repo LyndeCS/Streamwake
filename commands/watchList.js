@@ -17,7 +17,7 @@ module.exports = {
 		.setName("wl")
 		.setDescription("Open watchlist UI."),
 	async execute(interaction) {
-		if (!interaction.user.id in admins) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
 				ephemeral: true,
@@ -32,9 +32,6 @@ module.exports = {
 		// Build Watchlist Embed
 		const watchlistEmbed = new EmbedBuilder()
 			.setColor(0x00be92)
-			// .setAuthor({
-			// 	name: "ANIMATURDAY",
-			// })
 			.setTitle(`Watch List`)
 			.setDescription(
 				`----------------------------------------------------------\n
@@ -75,26 +72,32 @@ module.exports = {
 				text: `Type:  /sg showname   to suggest a show.`,
 			});
 
+		// set watchlist state to true
+		client.appStates.set("wl", true);
+
+		// reply and delete reply
 		const reply = await interaction.reply("Starting binger.");
 		await reply.delete();
-		const watchlistEmbedMsg = await interaction.channel.send({
-			embeds: [watchlistEmbed],
-			components: [watchlistRow],
-		});
-		const suggestionEmbedMsg = await interaction.channel.send({
-			embeds: [suggestionEmbed],
-		});
 
-		// Struct state tracking
-		client.embeds.set("watchlistEmbedStruct", [
-			watchlistEmbed,
-			watchlistEmbedMsg,
-		]);
-		client.embeds.set("suggestedShowsEmbedStruct", [
-			suggestionEmbed,
-			suggestionEmbedMsg,
-		]);
+		// send watchlist embed and buttons to channel
+		await interaction.channel
+			.send({
+				embeds: [watchlistEmbed],
+				components: [watchlistRow],
+			})
+			// update client embeds struct collection
+			.then((msg) => {
+				client.embeds.set("watchlistEmbedStruct", [watchlistEmbed, msg]);
+			});
 
-		client.appStates.set("wl", true);
+		// send suggested embed to channel
+		await interaction.channel
+			.send({
+				embeds: [suggestionEmbed],
+			})
+			//update client embeds struct collection
+			.then((msg) => {
+				client.embeds.set("suggestedShowsEmbedStruct", [suggestionEmbed, msg]);
+			});
 	},
 };

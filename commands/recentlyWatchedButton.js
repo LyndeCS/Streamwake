@@ -20,7 +20,7 @@ module.exports = {
 		.setDescription("Open drop-down menu of recently watched shows."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (!interaction.user.id in admins) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,

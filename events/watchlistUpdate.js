@@ -4,27 +4,40 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	name: "watchlistUpdate",
-	async execute(client) {
+	async execute(buttonRow) {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
-			const [embed, msg] = client.embeds.get("watchlistEmbedStruct");
+			const wlStruct = client.embeds.get("watchlistEmbedStruct");
+			const embed = wlStruct[0];
+			const msg = wlStruct[1];
 			const descHeader = `----------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.watchList.length
 				? descHeader
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.watchList.length; i++) {
-				desc += client.watchList[i] + "\n";
+				desc += `${i}. **__${client.watchList[i]}__** - *S01E01*\n`;
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 
-			await msg
-				.edit({
-					embeds: [newEmbed],
-				})
-				.then((msg) => {
-					client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
-				});
+			if (buttonRow) {
+				await msg
+					.edit({
+						embeds: [newEmbed],
+						components: [buttonRow],
+					})
+					.then((msg) => {
+						client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
+					});
+			} else {
+				await msg
+					.edit({
+						embeds: [newEmbed],
+					})
+					.then((msg) => {
+						client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
+					});
+			}
 		}
 	},
 };
