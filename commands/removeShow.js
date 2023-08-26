@@ -2,6 +2,9 @@ require("dotenv").config();
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
 const { SlashCommandBuilder } = require("discord.js");
+const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -39,14 +42,14 @@ module.exports = {
 			if (client.watchList.length > 0 && client.watchList.length > pos) {
 				const removedShowName = client.watchList[pos]["showName"];
 				client.watchList.splice(pos, 1);
-				// if watchlist is active, update embed
-				// if watchlist is inactive, send reply notifying user of succesful removal
-				client.appStates.get("wl")
-					? client.emit("watchlistUpdate")
-					: await interaction.reply({
-							content: `Removed ${removedShowName}.`,
-							ephemeral: true,
-					  });
+				// reply to interaction, update wl embed if wl is active
+				if (client.appStates.get("wl")) {
+					client.emit("watchlistUpdate");
+				}
+				await interaction.reply({
+					content: `Removed ${removedShowName}.`,
+					ephemeral: true,
+				});
 				// user entered invalid position to remove
 			} else {
 				await interaction.reply({
@@ -63,14 +66,19 @@ module.exports = {
 			) {
 				const removedShowName = client.suggestedShowsList[pos]["showName"];
 				client.suggestedShowsList.splice(pos, 1);
-				client.appStates.get("wl")
-					? // if watchlist is active, update embed
-					  // if watchlist is inactive, send reply notifying user of succesful removal
-					  client.emit("suggestionsUpdate")
-					: await interaction.reply({
-							content: `Removed ${removedShowName}.`,
-							ephemeral: true,
-					  });
+				// reply to interaction, update sg embed if wl is active
+				if (client.appStates.get("wl")) {
+					client.emit("suggestionsUpdate");
+				}
+				await interaction.reply({
+					content: `Removed ${removedShowName}.`,
+					ephemeral: true,
+				});
+			} else {
+				await interaction.reply({
+					content: `Invalid position entered.`,
+					ephemeral: true,
+				});
 			}
 		}
 	},
