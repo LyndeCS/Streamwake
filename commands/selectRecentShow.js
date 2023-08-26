@@ -32,12 +32,8 @@ module.exports = {
         =============================*/
 
 		// Update embed with selected show
-		const receivedEmbed = interaction.message.embeds[0];
 		const addedShow = interaction.values[0];
 		client.watchList.push(addedShow);
-		const newEmbed = EmbedBuilder.from(receivedEmbed).setDescription(
-			`${receivedEmbed.description}\n${addedShow}`
-		);
 
 		// Build Buttons
 		const recentlyWatchedButton = new ButtonBuilder()
@@ -55,9 +51,10 @@ module.exports = {
 		);
 
 		await interaction.deferUpdate();
-		await interaction.message.edit({
-			embeds: [newEmbed],
-			components: [buttonRow],
-		});
+		client.emit("watchlistUpdate", buttonRow);
+		const index = client.recentShowsList.indexOf(addedShow);
+		if (index > -1) {
+			client.recentShowsList.splice(index, 1);
+		}
 	},
 };

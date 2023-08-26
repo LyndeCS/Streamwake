@@ -35,11 +35,11 @@ module.exports = {
 		const recentlyWatchedMenu = new StringSelectMenuBuilder()
 			.setCustomId("selectRecentShow")
 			.setPlaceholder("Select a show");
-		for (let i = 0; i < client.recentShows.length; i++) {
+		for (let i = 0; i < client.recentShowsList.length; i++) {
 			recentlyWatchedMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(client.recentShows[i])
-					.setValue(client.recentShows[i])
+					.setLabel(client.recentShowsList[i])
+					.setValue(client.recentShowsList[i])
 			);
 		}
 		const receivedActionRow = interaction.message.components[0];

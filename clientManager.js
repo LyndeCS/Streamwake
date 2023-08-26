@@ -19,7 +19,7 @@ class ClientManager {
 		this.client.loggingStates = new Collection();
 		this.client.watchList = [];
 		this.client.suggestedShowsList = [];
-		this.client.recentShows = [
+		this.client.recentShowsList = [
 			"Jujutsu Kaisen",
 			"Psycho Pass",
 			"Reborn as a Vending Machine, I Now Wander the Dungeon",
