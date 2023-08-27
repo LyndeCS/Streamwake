@@ -1,6 +1,8 @@
 require("dotenv").config();
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
+const fs = require("fs");
+const path = require("path");
 const ownerId = process.env.OWNER_ID;
 const adminId = process.env.ADMIN_ID;
 const admins = [ownerId, adminId];
@@ -31,6 +33,35 @@ module.exports = {
 		const receivedEmbed = interaction.message.embeds[0];
 		const currShow = client.watchList[0];
 		const nextShow = client.watchList[1];
+		const guildId = interaction.guildId;
+		const guildName = interaction.guild.name;
+		const channelId = interaction.member.voice.channelId;
+		const channelName = interaction.member.voice.channel.name;
+
+		if (interaction.client.loggingStates.has(guildId)) {
+			const channelStates = interaction.client.loggingStates.get(guildId);
+			if (channelStates.has(channelId)) {
+				// Log to a file
+				const logMessage = `${new Date().toLocaleString()}: ${
+					currShow.showName
+				} - S0${currShow.season}E0${currShow.episode}.\n`;
+				const logFilePath = path.join(
+					__dirname,
+					"..",
+					"logs",
+					`${guildName}-episodes.log`
+				);
+
+				// Create the "logs" directory if it doesn't exist
+				const logsDirectory = path.join(__dirname, "..", "logs");
+				if (!fs.existsSync(logsDirectory)) {
+					fs.mkdirSync(logsDirectory);
+				}
+
+				// Append log message to the log file
+				fs.appendFileSync(logFilePath, logMessage);
+			}
+		}
 
 		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({
 			name: "Finished playing",
