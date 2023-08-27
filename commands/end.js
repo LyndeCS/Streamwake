@@ -69,7 +69,7 @@ module.exports = {
 						{ name: "\u200B", value: "\u200B" },
 						{
 							name: "Up next",
-							value: `[${nextShow.showName} - S0${nextShow.season}E0${nextShow.episode}](${nextShow.url})`,
+							value: `[${nextShow.showName} - S0${nextShow.season}E0${nextShow.episode}: ${nextShow.episodeName}](${nextShow.url})`,
 						}
 					)
 					.setImage(`${nextShow.thumbnail}`);

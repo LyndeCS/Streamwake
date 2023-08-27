@@ -80,6 +80,9 @@ module.exports = {
 			);
 		if (currShow.url) {
 			menu
+				.setTitle(
+					`${currShow.showName} - S0${currShow.season}E0${currShow.episode}: ${currShow.episodeName}`
+				)
 				.setURL(currShow.url)
 				.setThumbnail(currShow.thumbnail)
 				.setDescription(`*${currShow.desc}*`);
