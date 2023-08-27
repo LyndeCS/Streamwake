@@ -54,7 +54,7 @@ class ClientManager {
 				url: "https://www.crunchyroll.com/watch/GYZJNK74R/wisdomkingdom",
 				thumbnail:
 					"https://m.media-amazon.com/images/M/MV5BYjljYmYzNjMtZWY5YS00OGZjLTk4MTYtNDZmYzkxYjgyMDMzXkEyXkFqcGdeQXVyODM2NjQzOTA@._V1_.jpg",
-				desc: "Mira faces off against WWD women's pro wrestler Mah Miseon, but her swordfighting can't keep up with Miseon's well-built body and overwhelming strength. Mori faces the risk of being disqualified from the tournament after interfering with the match between Gang Manseok and Go Gamdo. Park Mujin, a National Assembly member and God of High School's sponsor, tells Mori that if he can defeat Commissioner Q in a match, he will be allowed to return to the tournament. Meanwhile, as regional preliminaries continue across Korea, a secretive organization schemes behind the scenes. The 'key' to fulfilling their desires turns out to be...",
+				desc: "Mira faces off against WWD women's pro wrestler Mah Miseon, but her swordfighting can't keep up with Miseon's well-built body and overwhelming strength.",
 			},
 			{
 				showName: "Hinamatsuri",
@@ -63,7 +63,7 @@ class ClientManager {
 				url: "https://www.crunchyroll.com/watch/GREX51Z3Y/life-is-about-survival",
 				thumbnail:
 					"https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/crunchyroll/6d2f1f6666708860afff5448626ff8da.jpe",
-				desc: "Security chief Ikaruga summons Mao to Japan, who instead ends up stranded on a deserted island. Meanwhile, Nitta’s ailing president is searching for someone to replace him, and Nitta finds himself accidentally at the center of a high-stakes power struggle.",
+				desc: "Security chief Ikaruga summons Mao to Japan, who instead ends up stranded on a deserted island. Meanwhile, Nitta’s ailing president is searching for someone to replace him.",
 			},
 			{
 				showName: "Eighty-Six",
