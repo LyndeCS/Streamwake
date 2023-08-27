@@ -35,32 +35,27 @@ module.exports = {
 		const nextShow = client.watchList[1];
 		const guildId = interaction.guildId;
 		const guildName = interaction.guild.name;
-		const channelId = interaction.member.voice.channelId;
-		const channelName = interaction.member.voice.channel.name;
 
-		if (interaction.client.loggingStates.has(guildId)) {
-			const channelStates = interaction.client.loggingStates.get(guildId);
-			if (channelStates.has(channelId)) {
-				// Log to a file
-				const logMessage = `${new Date().toLocaleString()}: ${
-					currShow.showName
-				} - S0${currShow.season}E0${currShow.episode}.\n`;
-				const logFilePath = path.join(
-					__dirname,
-					"..",
-					"logs",
-					`${guildName}-episodes.log`
-				);
+		if (client.loggingStates.has(guildId)) {
+			// Log to a file
+			const logMessage = `${new Date().toLocaleString()}: ${
+				currShow.showName
+			} - S0${currShow.season}E0${currShow.episode}.\n`;
+			const logFilePath = path.join(
+				__dirname,
+				"..",
+				"logs",
+				`${guildName}-episodes.log`
+			);
 
-				// Create the "logs" directory if it doesn't exist
-				const logsDirectory = path.join(__dirname, "..", "logs");
-				if (!fs.existsSync(logsDirectory)) {
-					fs.mkdirSync(logsDirectory);
-				}
-
-				// Append log message to the log file
-				fs.appendFileSync(logFilePath, logMessage);
+			// Create the "logs" directory if it doesn't exist
+			const logsDirectory = path.join(__dirname, "..", "logs");
+			if (!fs.existsSync(logsDirectory)) {
+				fs.mkdirSync(logsDirectory);
 			}
+
+			// Append log message to the log file
+			fs.appendFileSync(logFilePath, logMessage);
 		}
 
 		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({

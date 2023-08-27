@@ -1,4 +1,6 @@
 require("dotenv").config();
+const clientManager = require("../clientManager");
+const client = clientManager.getClient();
 const fs = require("fs");
 const path = require("path");
 const ownerId = process.env.OWNER_ID;
@@ -32,11 +34,11 @@ module.exports = {
 		const channelId = interaction.member.voice.channelId;
 		const channelName = interaction.member.voice.channel.name;
 
-		if (!interaction.client.loggingStates.has(guildId)) {
-			interaction.client.loggingStates.set(guildId, new Collection());
+		if (!client.loggingStates.has(guildId)) {
+			client.loggingStates.set(guildId, new Collection());
 		}
 
-		const channelStates = interaction.client.loggingStates.get(guildId);
+		const channelStates = client.loggingStates.get(guildId);
 
 		if (!channelStates.has(channelId)) {
 			channelStates.set(channelId, true);
