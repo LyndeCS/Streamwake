@@ -1,4 +1,6 @@
 require("dotenv").config();
+const clientManager = require("../clientManager");
+const client = clientManager.getClient();
 const ownerId = process.env.OWNER_ID;
 const adminId = process.env.ADMIN_ID;
 const admins = [ownerId, adminId];
@@ -27,20 +29,34 @@ module.exports = {
 		    END BUTTON IS PRESSED
         =============================*/
 		const receivedEmbed = interaction.message.embeds[0];
-		const newEmbed = EmbedBuilder.from(receivedEmbed)
-			.setAuthor({
-				name: "Finished playing",
-			})
-			.setFields(
-				{ name: "\u200B", value: "\u200B" },
-				{
-					name: "Up next",
-					value: `[Psycho Pass - S01E08: Spooky Boogie](https://www.crunchyroll.com/)`,
-				}
-			)
-			.setImage(
-				"https://discodracula.files.wordpress.com/2014/04/psycho-pass.jpg?w=768"
-			);
+		const currShow = client.watchList[0];
+		const nextShow = client.watchList[1];
+
+		const newEmbed = EmbedBuilder.from(receivedEmbed).setAuthor({
+			name: "Finished playing",
+		});
+
+		if (client.watchList.length > 1) {
+			if (nextShow.url) {
+				newEmbed
+					.setFields(
+						{ name: "\u200B", value: "\u200B" },
+						{
+							name: "Up next",
+							value: `[${nextShow.showName} - S0${nextShow.season}E0${nextShow.episode}](${nextShow.url})`,
+						}
+					)
+					.setImage(`${nextShow.thumbnail}`);
+			} else {
+				newEmbed.setFields(
+					{ name: "\u200B", value: "\u200B" },
+					{
+						name: "Up next",
+						value: `[${nextShow.showName} - S0${nextShow.season}E0${nextShow.episode}](https://www.crunchyroll.com)`,
+					}
+				);
+			}
+		}
 
 		// Player button UI
 		const receivedActionRow = interaction.message.components[0];

@@ -72,7 +72,7 @@ module.exports = {
 				name: "Up next",
 			})
 			.setTitle(
-				`${currShow.showName} - *S0${currShow.season}E0${currShow.episode}*`
+				`${currShow.showName} - S0${currShow.season}E0${currShow.episode}`
 			);
 		if (currShow.url) {
 			menu
