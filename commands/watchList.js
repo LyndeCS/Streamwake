@@ -49,14 +49,19 @@ module.exports = {
 			.setCustomId("suggestionsbutton")
 			.setStyle(ButtonStyle.Primary);
 		const startButton = new ButtonBuilder()
-			.setLabel("Start watching")
+			.setLabel("Start the show")
 			.setCustomId("start")
 			.setStyle(ButtonStyle.Success);
+		const logButton = new ButtonBuilder()
+			.setLabel("Start logging")
+			.setCustomId("startlog")
+			.setStyle(ButtonStyle.Secondary);
 
 		// Build Watch List Action Rows
 		const watchlistRow = new ActionRowBuilder().addComponents(
 			recentlyWatchedButton,
 			suggestionsButton,
+			logButton,
 			startButton
 		);
 

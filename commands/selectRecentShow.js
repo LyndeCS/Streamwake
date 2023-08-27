@@ -41,10 +41,15 @@ module.exports = {
 			.setLabel("Start watching")
 			.setCustomId("start")
 			.setStyle(ButtonStyle.Success);
+		const logButton = new ButtonBuilder()
+			.setLabel("Start logging")
+			.setCustomId("startlog")
+			.setStyle(ButtonStyle.Secondary);
 
 		const buttonRow = new ActionRowBuilder().addComponents(
 			recentlyWatchedButton,
 			suggestionsButton,
+			logButton,
 			startButton
 		);
 
