@@ -2,6 +2,8 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 const { SlashCommandBuilder, Collection } = require("discord.js");
 
 module.exports = {
@@ -18,7 +20,7 @@ module.exports = {
 				.setRequired(true)
 		),
 	async execute(interaction) {
-		if (interaction.user.id !== ownerId) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
 				ephemeral: true,

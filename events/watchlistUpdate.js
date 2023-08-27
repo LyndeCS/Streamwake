@@ -25,7 +25,7 @@ module.exports = {
 				const currShow = client.watchList[i];
 				desc += `${i + 1}. **__${currShow.showName}__** - *S0${
 					currShow.season
-				}E0${currShow.recent ? currShow.episode + 1 : currShow.episode}*\n`;
+				}E0${currShow.episode}*\n`;
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

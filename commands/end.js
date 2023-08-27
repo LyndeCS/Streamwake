@@ -1,5 +1,7 @@
 require("dotenv").config();
 const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 const {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -14,7 +16,7 @@ module.exports = {
 		.setDescription("End current episode."),
 	async execute(interaction) {
 		// Command sent from non-owner
-		if (interaction.user.id !== ownerId) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
 				ephemeral: true,

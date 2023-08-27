@@ -48,6 +48,7 @@ module.exports = {
 			(show) => show.showName === interaction.values[0]
 		);
 		addedShow.recent = true;
+		addedShow.episode += 1;
 		client.watchList.push(addedShow);
 
 		await interaction.deferUpdate();

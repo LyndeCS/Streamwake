@@ -1,5 +1,9 @@
 require("dotenv").config();
+const clientManager = require("../clientManager");
+const client = clientManager.getClient();
 const ownerId = process.env.OWNER_ID;
+const adminId = process.env.ADMIN_ID;
+const admins = [ownerId, adminId];
 const {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -15,9 +19,17 @@ module.exports = {
 			"Start the bot, initiating activity logging and opening menu."
 		),
 	async execute(interaction) {
-		if (interaction.user.id !== ownerId) {
+		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
+				ephemeral: true,
+			});
+			return;
+		}
+
+		if (!client.watchList.length) {
+			await interaction.reply({
+				content: "Watchlist is empty.",
 				ephemeral: true,
 			});
 			return;
@@ -51,20 +63,42 @@ module.exports = {
 			nextButton
 		);
 
+		const currShow = client.watchList[0];
+
 		// Build Embed
 		const menu = new EmbedBuilder()
 			.setColor(0x00be92)
 			.setAuthor({
 				name: "Up next",
 			})
-			.setTitle("Jujutsu Kaisen - S02E06: Pizza dogs")
-			.setURL("https://www.crunchyroll.com/")
-			.setThumbnail("https://i.imgur.com/pUaoPrt.jpg")
-			.setDescription(`*"Episode description."*`);
-		//.addFields({ name: "\u200b", value: "\u200b" });
+			.setTitle(
+				`${currShow.showName} - *S0${currShow.season}E0${currShow.episode}*`
+			);
+		if (currShow.url) {
+			menu
+				.setURL(currShow.url)
+				.setThumbnail(currShow.thumbnail)
+				.setDescription(`*${currShow.desc}*`);
+		}
 
-		const reply = await interaction.reply("Starting binger.");
+		const reply = await interaction.reply({
+			content: "Loading player...",
+			ephemeral: true,
+		});
 		await reply.delete();
+
+		if (client.appStates.get("wl")) {
+			const wlStruct = client.embeds.get("watchlistEmbedStruct");
+			const slStruct = client.embeds.get("suggestedShowsEmbedStruct");
+			const wlMsg = wlStruct[1];
+			const slMsg = slStruct[1];
+			await wlMsg
+				.delete()
+				.then(await slMsg.delete())
+				.then(client.appStates.set("wl", false));
+		}
+
+		client.appStates.set("player", true);
 		await interaction.channel.send({
 			components: [row],
 			embeds: [menu],
