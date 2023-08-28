@@ -1,5 +1,5 @@
 require("dotenv").config();
-const clientManager = require("../clientManager");
+const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const { SlashCommandBuilder } = require("discord.js");
 const admins = process.env.ADMIN_ARRAY;

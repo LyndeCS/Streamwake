@@ -1,15 +1,12 @@
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
-const clientManager = require("../clientManager");
+const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
 const {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	EmbedBuilder,
 	SlashCommandBuilder,
 } = require("discord.js");
 

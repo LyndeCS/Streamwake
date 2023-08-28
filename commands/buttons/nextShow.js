@@ -1,5 +1,5 @@
 require("dotenv").config();
-const clientManager = require("../clientManager");
+const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
 const {
@@ -12,10 +12,8 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("start")
-		.setDescription(
-			"Start the bot, initiating activity logging and opening menu."
-		),
+		.setName("next")
+		.setDescription("Continue to next show in watchlist."),
 	async execute(interaction) {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
@@ -25,6 +23,12 @@ module.exports = {
 			return;
 		}
 
+		// remove previously watched show
+		if (client.watchList.length > 0) {
+			client.watchList.splice(0, 1);
+		}
+
+		// check for empty watchlist
 		if (!client.watchList.length) {
 			await interaction.reply({
 				content: "Watchlist is empty.",
@@ -82,27 +86,11 @@ module.exports = {
 				.setDescription(`*${currShow.desc}*`);
 		}
 
-		const reply = await interaction.reply({
-			content: "Loading player...",
-			ephemeral: true,
-		});
-		await reply.delete();
+		await interaction.deferUpdate();
 
-		if (client.appStates.get("wl")) {
-			const wlStruct = client.embeds.get("watchlistEmbedStruct");
-			const slStruct = client.embeds.get("suggestedShowsEmbedStruct");
-			const wlMsg = wlStruct[1];
-			const slMsg = slStruct[1];
-			await wlMsg
-				.delete()
-				.then(await slMsg.delete())
-				.then(client.appStates.set("wl", false));
-		}
-
-		client.appStates.set("player", true);
-		await interaction.channel.send({
-			components: [row],
+		await interaction.message.edit({
 			embeds: [menu],
+			components: [row],
 		});
 	},
 };

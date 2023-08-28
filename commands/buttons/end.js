@@ -1,5 +1,5 @@
 require("dotenv").config();
-const clientManager = require("../clientManager");
+const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const fs = require("fs");
 const path = require("path");

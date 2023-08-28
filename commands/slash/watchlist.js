@@ -1,5 +1,5 @@
 require("dotenv").config();
-const clientManager = require("../clientManager");
+const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
 const {
@@ -46,14 +46,14 @@ module.exports = {
 			.setLabel("Suggestions")
 			.setCustomId("suggestionsbutton")
 			.setStyle(ButtonStyle.Primary);
-		const startButton = new ButtonBuilder()
-			.setLabel("Start the show")
-			.setCustomId("start")
-			.setStyle(ButtonStyle.Success);
 		const logButton = new ButtonBuilder()
 			.setLabel("Start logging")
 			.setCustomId("startlog")
 			.setStyle(ButtonStyle.Secondary);
+		const startButton = new ButtonBuilder()
+			.setLabel("Start the show")
+			.setCustomId("start")
+			.setStyle(ButtonStyle.Success);
 
 		// Build Watch List Action Rows
 		const watchlistRow = new ActionRowBuilder().addComponents(
