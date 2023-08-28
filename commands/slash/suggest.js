@@ -23,6 +23,7 @@ module.exports = {
 			showName: suggestedShow,
 			season: 1,
 			episode: 1,
+			votes: 1,
 		});
 
 		const reply = await interaction.reply({
