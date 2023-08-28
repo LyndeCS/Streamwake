@@ -5,7 +5,7 @@ const { Events } = require("discord.js");
 module.exports = {
 	name: Events.MessageCreate,
 	async execute(message) {
-		if (message.channel.id === "1140355793418457118") {
+		if (message.channel.id === "1145205774985990144") {
 			if (message.author.id !== client.user.id) {
 				await message.delete();
 			}
