@@ -38,7 +38,7 @@ module.exports = {
 		await channel.bulkDelete(messagesToDelete);
 
 		// Optionally, you can send a message to indicate that the operation is complete
-		const confirmationMessage = await interaction.edireply({
+		const confirmationMessage = await interaction.reply({
 			content: `Deleted ${messagesToDelete.size} messages.`,
 			ephemeral: true,
 		});

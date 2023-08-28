@@ -1,7 +1,5 @@
 require("dotenv").config();
-const ownerId = process.env.OWNER_ID;
-const adminId = process.env.ADMIN_ID;
-const admins = [ownerId, adminId];
+const admins = process.env.ADMIN_ARRAY;
 const {
 	ActionRowBuilder,
 	ButtonBuilder,

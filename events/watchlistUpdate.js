@@ -23,9 +23,16 @@ module.exports = {
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.watchList.length; i++) {
 				const currShow = client.watchList[i];
-				desc += `${i + 1}. **__${currShow.showName}__** - *S0${
-					currShow.season
-				}E0${currShow.episode}*\n`;
+				const hasLink = currShow.url ? true : false;
+				if (hasLink) {
+					desc += `${i + 1}. [**__${currShow.showName}__** - S0${
+						currShow.season
+					}E0${currShow.episode}](${currShow.url})\n`;
+				} else {
+					desc += `${i + 1}. **__${currShow.showName}__** - S0${
+						currShow.season
+					}E0${currShow.episode}\n`;
+				}
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

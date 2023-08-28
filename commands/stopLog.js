@@ -1,9 +1,7 @@
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const ownerId = process.env.OWNER_ID;
-const adminId = process.env.ADMIN_ID;
-const admins = [ownerId, adminId];
+const admins = process.env.ADMIN_ARRAY;
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
