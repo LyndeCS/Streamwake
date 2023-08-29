@@ -17,9 +17,9 @@ module.exports = {
 				: descHeader + emptyHeader;
 			for (let i = 0; i < client.suggestedShowsList.length; i++) {
 				const currShow = client.suggestedShowsList[i];
-				desc += `**__${currShow["showName"]}__** - ${currShow.votes} ${
-					currShow.votes > 1 ? "Votes" : "Vote"
-				}\n`;
+				desc += `**__${currShow["showName"]}__** - *${currShow.votes} ${
+					currShow.votes > 1 ? "votes" : "vote"
+				}*\n`;
 			}
 			const newEmbed = EmbedBuilder.from(embed).setDescription(desc);
 

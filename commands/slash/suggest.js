@@ -24,6 +24,7 @@ module.exports = {
 			season: 1,
 			episode: 1,
 			votes: 1,
+			voters: [interaction.user.id],
 		});
 
 		const reply = await interaction.reply({

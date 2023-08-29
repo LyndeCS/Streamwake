@@ -38,10 +38,10 @@ module.exports = {
 		await channel.bulkDelete(messagesToDelete);
 
 		// Optionally, you can send a message to indicate that the operation is complete
-		const confirmationMessage = await interaction.reply({
+		const reply = await interaction.reply({
 			content: `Deleted ${messagesToDelete.size} messages.`,
 			ephemeral: true,
 		});
-		setTimeout(() => confirmationMessage.delete(), 2000); // Delete the confirmation message after 5 seconds
+		reply.delete(); // Delete the confirmation message after 5 seconds
 	},
 };

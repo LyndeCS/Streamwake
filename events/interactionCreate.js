@@ -5,7 +5,22 @@ const client = clientManager.getClient();
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
-		if (interaction.isChatInputCommand()) {
+		if (interaction.isAutocomplete()) {
+			const command = interaction.client.commands.get(interaction.commandName);
+
+			if (!command) {
+				console.error(
+					`No command matching ${interaction.commandName} was found.`
+				);
+				return;
+			}
+
+			try {
+				await command.autocomplete(interaction);
+			} catch (error) {
+				console.error(error);
+			}
+		} else if (interaction.isChatInputCommand()) {
 			const command = interaction.client.commands.get(interaction.commandName);
 
 			if (!command) {
@@ -31,7 +46,11 @@ module.exports = {
 					});
 				}
 			}
-		} else if (interaction.isButton()) {
+		} else if (
+			interaction.isButton() &&
+			interaction.customId !== "confirm" &&
+			interaction.customId !== "cancel"
+		) {
 			// Button is pressed
 			await client.commands.get(interaction.customId).execute(interaction);
 		} else if (interaction.isStringSelectMenu()) {
