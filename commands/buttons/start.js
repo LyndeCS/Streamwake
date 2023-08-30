@@ -13,9 +13,7 @@ const {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("start")
-		.setDescription(
-			"Start the bot, initiating activity logging and opening menu."
-		),
+		.setDescription("Start watching and open the player UI."),
 	async execute(interaction) {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
@@ -88,21 +86,24 @@ module.exports = {
 		});
 		await reply.delete();
 
-		if (client.appStates.get("wl")) {
-			const wlStruct = client.embeds.get("watchlistEmbedStruct");
-			const slStruct = client.embeds.get("suggestedShowsEmbedStruct");
-			const wlMsg = wlStruct[1];
-			const slMsg = slStruct[1];
-			await wlMsg
-				.delete()
-				.then(await slMsg.delete())
-				.then(client.appStates.set("wl", false));
-		}
+		// // Delete watchlist/suggestions embed messages
+		// if (client.appStates.get("wl")) {
+		// 	const wlStruct = client.embeds.get("watchlistEmbedStruct");
+		// 	const slStruct = client.embeds.get("suggestedShowsEmbedStruct");
+		// 	const wlMsg = wlStruct[1];
+		// 	const slMsg = slStruct[1];
+		// 	await wlMsg
+		// 		.delete()
+		// 		.then(await slMsg.delete())
+		// 		.then(client.appStates.set("wl", false));
+		// }
 
 		client.appStates.set("player", true);
-		await interaction.channel.send({
-			components: [row],
-			embeds: [menu],
-		});
+		await interaction.channel
+			.send({
+				embeds: [menu],
+				components: [row],
+			})
+			.then((msg) => client.embeds.set("player", { embed: menu, msg: msg }));
 	},
 };

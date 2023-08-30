@@ -161,9 +161,7 @@ class ClientManager {
 		];
 		this.client.recentShowsDropdownList = [...this.client.recentShowsList];
 		this.client.embeds = new Collection();
-		this.client.appStates = new Collection()
-			.set("wl", false)
-			.set("player", false);
+		this.client.appStates = new Collection().set({ wl: false, player: false });
 	}
 
 	async login(token) {

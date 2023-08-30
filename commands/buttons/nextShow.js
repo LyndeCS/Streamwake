@@ -26,14 +26,19 @@ module.exports = {
 		// remove previously watched show
 		if (client.watchList.length > 0) {
 			client.watchList.splice(0, 1);
+			client.emit("watchlistUpdate");
 		}
 
 		// check for empty watchlist
 		if (!client.watchList.length) {
-			await interaction.reply({
-				content: "Watchlist is empty.",
+			client.appStates.set("player", false);
+			const playerStruct = client.embeds.get("player");
+			playerStruct.msg.delete();
+			const reply = await interaction.reply({
+				content: "Watchlist is empty. Closing player.",
 				ephemeral: true,
 			});
+			setTimeout(() => reply.delete(), 2000);
 			return;
 		}
 

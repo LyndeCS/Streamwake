@@ -53,7 +53,6 @@ module.exports = {
 				!interaction.customId === "cancel"
 			) {
 				await client.commands.get(interaction.customId).execute(interaction);
-			} else {
 			}
 		} else if (interaction.isStringSelectMenu()) {
 			// Menu option is selected

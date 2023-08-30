@@ -13,9 +13,10 @@ module.exports = {
 
 		// watchlist is active
 		if (client.appStates.get("wl")) {
-			const wlStruct = client.embeds.get("watchlistEmbedStruct");
-			const embed = wlStruct[0];
-			const msg = wlStruct[1];
+			// const wlStruct = client.embeds.get("watchlistEmbedStruct");
+			// const embed = wlStruct[0];
+			// const msg = wlStruct[1];
+			const { embed, msg } = client.embeds.get("watchlist");
 			const descHeader = `--------------------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.watchList.length
@@ -43,7 +44,7 @@ module.exports = {
 						components: [buttonRow],
 					})
 					.then((msg) => {
-						client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
+						client.embeds.set("watchlist", { embed: newEmbed, msg: msg });
 					});
 			} else {
 				await msg
@@ -51,7 +52,7 @@ module.exports = {
 						embeds: [newEmbed],
 					})
 					.then((msg) => {
-						client.embeds.set("watchlistEmbedStruct", [newEmbed, msg]);
+						client.embeds.set("watchlist", { embed: newEmbed, msg: msg });
 					});
 			}
 		}

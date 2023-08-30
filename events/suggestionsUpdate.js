@@ -7,9 +7,10 @@ module.exports = {
 	async execute() {
 		// watchlist is active
 		if (client.appStates.get("wl")) {
-			const wlStruct = client.embeds.get("suggestedShowsEmbedStruct");
-			const embed = wlStruct[0];
-			const msg = wlStruct[1];
+			// const wlStruct = client.embeds.get("suggestedShowsEmbedStruct");
+			// const embed = wlStruct[0];
+			// const msg = wlStruct[1];
+			const { embed, msg } = client.embeds.get("suggestions");
 			const descHeader = `--------------------------------------------------------------------\n`;
 			const emptyHeader = `Currently empty.`;
 			let desc = client.suggestedShowsList.length
@@ -28,7 +29,7 @@ module.exports = {
 					embeds: [newEmbed],
 				})
 				.then((msg) => {
-					client.embeds.set("suggestedShowsEmbedStruct", [newEmbed, msg]);
+					client.embeds.set("suggestions", { embed: newEmbed, msg: msg });
 				});
 		}
 	},

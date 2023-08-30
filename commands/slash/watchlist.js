@@ -28,7 +28,7 @@ module.exports = {
 		==============*/
 
 		// if watchlist embed already exists
-		if (client.embeds.get("watchlistEmbedStruct")) {
+		if (client.embeds.get("watchlist")) {
 			// do we want to edit or send new msg for embed
 			// if we're calling /wl we can assume it is not visible
 			// if it is not visible it should not have a message property in the struct
@@ -77,7 +77,7 @@ module.exports = {
 		==============*/
 
 		// Build Suggestion Embed
-		const suggestionEmbed = new EmbedBuilder()
+		const suggestionsEmbed = new EmbedBuilder()
 			.setColor(0x00be92)
 			.setTitle(`Suggestions`)
 			.setDescription(
@@ -104,18 +104,18 @@ module.exports = {
 			})
 			// update client embeds struct collection
 			.then((msg) => {
-				client.embeds.set("watchlistEmbedStruct", [watchlistEmbed, msg]);
+				client.embeds.set("watchlist", { embed: watchlistEmbed, msg: msg });
 				client.emit("watchlistUpdate");
 			});
 
 		// send suggested embed to channel
 		await interaction.channel
 			.send({
-				embeds: [suggestionEmbed],
+				embeds: [suggestionsEmbed],
 			})
 			//update client embeds struct collection
 			.then((msg) => {
-				client.embeds.set("suggestedShowsEmbedStruct", [suggestionEmbed, msg]);
+				client.embeds.set("suggestions", { embed: suggestionsEmbed, msg: msg });
 				client.emit("suggestionsUpdate");
 			});
 	},
