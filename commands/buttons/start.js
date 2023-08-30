@@ -86,18 +86,6 @@ module.exports = {
 		});
 		await reply.delete();
 
-		// // Delete watchlist/suggestions embed messages
-		// if (client.appStates.get("wl")) {
-		// 	const wlStruct = client.embeds.get("watchlistEmbedStruct");
-		// 	const slStruct = client.embeds.get("suggestedShowsEmbedStruct");
-		// 	const wlMsg = wlStruct[1];
-		// 	const slMsg = slStruct[1];
-		// 	await wlMsg
-		// 		.delete()
-		// 		.then(await slMsg.delete())
-		// 		.then(client.appStates.set("wl", false));
-		// }
-
 		client.appStates.set("player", true);
 		await interaction.channel
 			.send({
