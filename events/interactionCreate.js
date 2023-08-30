@@ -46,13 +46,15 @@ module.exports = {
 					});
 				}
 			}
-		} else if (
-			interaction.isButton() &&
-			interaction.customId !== "confirm" &&
-			interaction.customId !== "cancel"
-		) {
+		} else if (interaction.isButton()) {
 			// Button is pressed
-			await client.commands.get(interaction.customId).execute(interaction);
+			if (
+				!interaction.customId === "confirm" &&
+				!interaction.customId === "cancel"
+			) {
+				await client.commands.get(interaction.customId).execute(interaction);
+			} else {
+			}
 		} else if (interaction.isStringSelectMenu()) {
 			// Menu option is selected
 			if (interaction.customId === "selectRecentShow") {

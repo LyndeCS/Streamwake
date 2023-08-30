@@ -6,6 +6,7 @@ const {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 } = require("discord.js");
 
 module.exports = {
@@ -87,70 +88,55 @@ module.exports = {
 			);
 
 			// ask user if they would like to remove their vote from specified show
-			const response = await interaction.reply({
-				content:
-					"You have already voted for this show. Would you like to remove your vote?",
-				components: [buttonRow],
-				ephemeral: true,
-			});
-			setTimeout(() => response.delete(), 10_000);
 
-			// listen for response from user
-			const collectorFilter = (i) => i.user.id === interaction.user.id;
-			try {
-				const confirmation = await response.awaitMessageComponent({
-					filter: collectorFilter,
-					time: 10_000,
-				});
+			await interaction
+				.reply({
+					content:
+						"You have already voted for this show. Would you like to remove your vote?",
+					components: [buttonRow],
+					ephemeral: true,
+				})
+				.then((msg) => {
+					const timer = setTimeout(() => msg.delete(), 10_000);
+					const filter = (i) => i.user.id === interaction.user.id;
 
-				// user confirms removal of their vote
-				if (confirmation.customId === "confirm") {
-					// remove show from list if there is only one vote to remove
-					if (targetShow.votes === 1) {
-						const index = client.suggestedShowsList.indexOf(
-							(show) => show.showName === targetShow.showName
-						);
-						client.suggestedShowsList.splice(index, 1);
-
-						// update suggestions embed
-						client.emit("suggestionsUpdate");
-
-						const reply = await confirmation.update({
-							content: "Show removed from list.",
-							components: [],
-						});
-						setTimeout(() => reply.delete(), 2000);
-						return;
-					} else {
-						// User confirms removing their vote and they are not the only voter
-						// subtract vote and remove user from list of voters
-						targetShow.votes -= 1;
-						const index = targetShow.voters.indexOf(interaction.user.id);
-						targetShow.voters.splice(index, 1);
-
-						// update suggestions embed
-						client.emit("suggestionsUpdate");
-
-						const reply = await confirmation.update({
-							content: "Your vote was removed.",
-							components: [],
-						});
-						setTimeout(() => reply.delete(), 2000);
-						return;
-					}
-				} else if (confirmation.customId === "cancel") {
-					// User chooses not to remove their vote
-					const reply = await confirmation.update({
-						content: "Your vote was not removed.",
-						components: [],
+					const collector = msg.createMessageComponentCollector({
+						componentType: ComponentType.Button,
+						filter,
+						time: 10_000,
 					});
-					setTimeout(() => reply.delete(), 2000);
-					return;
-				}
-			} catch (e) {
-				// Vote removal confirmation message expires
-				return;
-			}
+
+					collector.on("collect", (i) => {
+						clearTimeout(timer);
+						if (i.customId === "confirm") {
+							msg.delete();
+							if (targetShow.votes === 1) {
+								const index = client.suggestedShowsList.indexOf(
+									(show) => show.showName === targetShow.showName
+								);
+								client.suggestedShowsList.splice(index, 1);
+
+								// update suggestions embed
+								client.emit("suggestionsUpdate");
+							} else {
+								// User confirms removing their vote and they are not the only voter
+								// subtract vote and remove user from list of voters
+								targetShow.votes -= 1;
+								const index = targetShow.voters.indexOf(interaction.user.id);
+								targetShow.voters.splice(index, 1);
+
+								// update suggestions embed
+								client.emit("suggestionsUpdate");
+							}
+						} else if (i.customId === "cancel") {
+							msg.delete();
+						}
+					});
+
+					collector.on("end", (collected) => {
+						clearTimeout(timer);
+					});
+				});
 		}
 	},
 };

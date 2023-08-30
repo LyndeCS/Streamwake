@@ -27,6 +27,15 @@ module.exports = {
 		  WATCHLIST UI
 		==============*/
 
+		// if watchlist embed already exists
+		if (client.embeds.get("watchlistEmbedStruct")) {
+			// do we want to edit or send new msg for embed
+			// if we're calling /wl we can assume it is not visible
+			// if it is not visible it should not have a message property in the struct
+			// if no message property, we send new message with existing embed,
+			// update description with watchList first
+		}
+
 		// Build Watchlist Embed
 		const watchlistEmbed = new EmbedBuilder()
 			.setColor(0x00be92)
@@ -77,7 +86,7 @@ module.exports = {
 			)
 			.setThumbnail("https://i.imgur.com/SZJ5qq1.png")
 			.setFooter({
-				text: `Type:  /sg showname   to suggest a show.`,
+				text: `Type:  /sg showname   to suggest a show, Type:  /vote showname   to vote for a show.`,
 			});
 
 		// set watchlist state to true
@@ -96,6 +105,7 @@ module.exports = {
 			// update client embeds struct collection
 			.then((msg) => {
 				client.embeds.set("watchlistEmbedStruct", [watchlistEmbed, msg]);
+				client.emit("watchlistUpdate");
 			});
 
 		// send suggested embed to channel
@@ -106,6 +116,7 @@ module.exports = {
 			//update client embeds struct collection
 			.then((msg) => {
 				client.embeds.set("suggestedShowsEmbedStruct", [suggestionEmbed, msg]);
+				client.emit("suggestionsUpdate");
 			});
 	},
 };
