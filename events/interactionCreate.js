@@ -49,8 +49,8 @@ module.exports = {
 		} else if (interaction.isButton()) {
 			// Button is pressed
 			if (
-				!interaction.customId === "confirm" &&
-				!interaction.customId === "cancel"
+				interaction.customId !== "confirm" &&
+				interaction.customId !== "cancel"
 			) {
 				await client.commands.get(interaction.customId).execute(interaction);
 			}
