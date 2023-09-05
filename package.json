@@ -1,5 +1,5 @@
 {
-  "name": "binger",
+  "name": "streamwake",
   "version": "1.0.0",
   "description": "discord bot to track anime episodes watched with friends",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LyndeCS/binger.git"
+    "url": "git+https://github.com/LyndeCS/Streamwake.git"
   },
   "keywords": [
     "discord",
@@ -22,9 +22,9 @@
   "author": "Christopher Lynde",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/LyndeCS/binger/issues"
+    "url": "https://github.com/LyndeCS/Streamwake/issues"
   },
-  "homepage": "https://github.com/LyndeCS/binger#readme",
+  "homepage": "https://github.com/LyndeCS/Streamwake#readme",
   "dependencies": {
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1"
