@@ -44,7 +44,7 @@ module.exports = {
 				`--------------------------------------------------------------------\n
 				Currently empty.`
 			)
-			.setThumbnail("https://i.imgur.com/xyfMF0v.png");
+			.setThumbnail("https://i.imgur.com/S3R7Ror.png");
 
 		// Build Watchlist Buttons
 		const recentlyWatchedButton = new ButtonBuilder()
@@ -84,7 +84,7 @@ module.exports = {
 				`--------------------------------------------------------------------\n
 			Currently empty.`
 			)
-			.setThumbnail("https://i.imgur.com/SZJ5qq1.png")
+			.setThumbnail("https://i.imgur.com/zAQ65B4.png")
 			.setFooter({
 				text: `Type:  /sg showname   to suggest a show, Type:  /vote showname   to vote for a show.`,
 			});
@@ -93,7 +93,7 @@ module.exports = {
 		client.appStates.set("wl", true);
 
 		// reply and delete reply
-		const reply = await interaction.reply("Starting binger.");
+		const reply = await interaction.reply("Starting Streamwake.");
 		await reply.delete();
 
 		// send watchlist embed and buttons to channel
