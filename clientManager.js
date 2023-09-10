@@ -23,7 +23,7 @@ class ClientManager {
 			{
 				showName: "Jujutsu Kaisen",
 				season: 2,
-				episode: 5,
+				episode: 6,
 				episodeName: "Premature Death",
 				url: "https://www.crunchyroll.com/watch/GX9UQZEZJ/premature-death",
 				thumbnail:
@@ -33,7 +33,7 @@ class ClientManager {
 			{
 				showName: "Psycho-Pass",
 				season: 1,
-				episode: 8,
+				episode: 10,
 				episodeName: "Paradise Fruit",
 				url: "https://www.crunchyroll.com/watch/G6WEXEWQ6/paradise-fruit",
 				thumbnail:
@@ -53,7 +53,7 @@ class ClientManager {
 			{
 				showName: "The God of Highschool",
 				season: 1,
-				episode: 2,
+				episode: 3,
 				episodeName: "wisdom/kingdom",
 				url: "https://www.crunchyroll.com/watch/GYZJNK74R/wisdomkingdom",
 				thumbnail:
@@ -63,7 +63,7 @@ class ClientManager {
 			{
 				showName: "Hinamatsuri",
 				season: 1,
-				episode: 8,
+				episode: 10,
 				episodeName: "Life Is About Survival",
 				url: "https://www.crunchyroll.com/watch/GREX51Z3Y/life-is-about-survival",
 				thumbnail:
@@ -73,7 +73,7 @@ class ClientManager {
 			{
 				showName: "Eighty-Six",
 				season: 1,
-				episode: 4,
+				episode: 6,
 				episodeName: "I'm With You",
 				url: "https://www.crunchyroll.com/watch/G4VUQMQ2P/im-with-you",
 				thumbnail:
@@ -111,8 +111,8 @@ class ClientManager {
 			},
 			{
 				showName: "Link Click",
-				season: 1,
-				episode: 8,
+				season: 2,
+				episode: 2,
 				episodeName: "Consequence of Goodwill",
 				url: "https://www.crunchyroll.com/watch/GZ7UVKGMW/consequence-of-goodwill",
 				thumbnail:
