@@ -28,15 +28,8 @@ module.exports = {
 		==============*/
 
 		// if watchlist embed already exists
-		if (client.embeds.get("watchlist")) {
-			// do we want to edit or send new msg for embed
-			// if we're calling /wl we can assume it is not visible
-			// can't assume its not visible, check channel for message?
-			// ->
-			// if it is not visible it should not have a message property in the struct
-			// if no message property, we send new message with existing embed,
-			// update description with watchList first
-		}
+		// if (client.embeds.get("watchlist")) {
+		// }
 
 		// Build Watchlist Embed
 		const watchlistEmbed = new EmbedBuilder()
