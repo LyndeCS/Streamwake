@@ -1,4 +1,5 @@
 require("dotenv").config();
+const Sequelize = require("sequelize");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -13,6 +14,13 @@ class ClientManager {
 				GatewayIntentBits.GuildMembers,
 				GatewayIntentBits.GuildVoiceStates,
 			],
+		});
+
+		this.sequelize = new Sequelize("database", "user", "password", {
+			host: "localhost",
+			dialect: "sqlite",
+			logging: false,
+			storage: "database.sqlite", //SQLite only
 		});
 
 		this.client.commands = new Collection();
