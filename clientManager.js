@@ -1,4 +1,7 @@
 require("dotenv").config();
+const db = process.env.DB_NAME;
+const db_user = process.env.DB_USER;
+const db_pw = process.env.DB_PW;
 const Sequelize = require("sequelize");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
@@ -16,11 +19,9 @@ class ClientManager {
 			],
 		});
 
-		this.sequelize = new Sequelize("database", "user", "password", {
+		this.sequelize = new Sequelize(db, db_user, db_pw, {
 			host: "localhost",
-			dialect: "sqlite",
-			logging: false,
-			storage: "database.sqlite", //SQLite only
+			dialect: "mysql",
 		});
 
 		this.client.commands = new Collection();
