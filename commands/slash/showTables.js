@@ -23,7 +23,5 @@ module.exports = {
 		const tagString = tagList.map((t) => t.name).join(", ") || "No tags set.";
 
 		await interaction.reply(`List of tags: ${tagString}`);
-
-		//await interaction.reply("Good.");
 	},
 };
