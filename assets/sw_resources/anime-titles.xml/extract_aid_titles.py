@@ -24,6 +24,6 @@ for aid, title in sorted_titles:
 # Save the selected official English titles with their @aid values to a new file
 with open('official_english_titles_with_aid.txt', 'w') as file:
     for aid, title in sorted_titles:
-        file.write(f"AID: {aid}, Title: {title}\n")
+        file.write(f"{aid}, {title}\n")
 
 print('Official English titles with @aid values saved to official_english_titles_with_aid.txt (sorted)')
