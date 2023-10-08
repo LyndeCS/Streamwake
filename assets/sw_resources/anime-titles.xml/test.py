@@ -6,10 +6,7 @@ load_dotenv()
 TVDB_KEY = os.getenv("TVDB_KEY")
 tvdb = tvdb_v4_official.TVDB(TVDB_KEY)
 
-movie = tvdb.get_movie_extended(31)
-characters = []
-for c in movie["characters"]:
-    characters.append(c)
-
-person = tvdb.get_person_extended(characters[0]["peopleId"])
-print(person)
+results = tvdb.search("demon slayer", type="series")
+for result in results:
+    for key, val in result.items():
+        print(key, "->", val, "\n")
