@@ -1,12 +1,18 @@
 import tvdb_v4_official
+import os
+from dotenv import load_dotenv
 
-tvdb = tvdb_v4_official.TVDB("APIKEY")
+load_dotenv()
+
+TVDB_KEY = os.getenv("TVDB_KEY")
+
+tvdb = tvdb_v4_official.TVDB(TVDB_KEY)
 # OR:
 # tvdb = tvdb_v4_official.TVDB("APIKEY", pin="YOUR PIN HERE")
 
 # fetching several pages of series info
-series_list = [ ]
-for j in range(5): # Pages are numbered from 0
+series_list = []
+for j in range(5):  # Pages are numbered from 0
     series_list += tvdb.get_all_series(j)
 
 # fetching a series
@@ -16,10 +22,10 @@ series = tvdb.get_series(121361)
 series = tvdb.get_series_extended(121361)
 for season in sorted(series["seasons"], key=lambda x: (x["type"]["name"], x["number"])):
     if season["type"]["name"] == "Aired Order" and season["number"] == 1:
-	    season = tvdb.get_season_extended(season["id"])
-	break
-else:
-    season = None
+        season = tvdb.get_season_extended(season["id"])
+        break
+    else:
+        season = None
 if season is not None:
     print(season["episodes"])
 
@@ -30,7 +36,7 @@ for ep in info["episodes"]:
     print(ep)
 
 # fetching a movie
-movie = tvdb.get_movie(31) # avengers
+movie = tvdb.get_movie(31)  # avengers
 
 # access a movie's characters
 movie = tvdb.get_movie_extended(31)
@@ -42,4 +48,6 @@ person = tvdb.get_person_extended(characters[0]["peopleId"])
 print(person)
 
 # using since If-Modifed-Since parameter
-series = tvdb.get_series_extended(393199, if_modified_since="Wed, 30 Jun 2022 07:28:00 GMT")
+series = tvdb.get_series_extended(
+    393199, if_modified_since="Wed, 30 Jun 2022 07:28:00 GMT"
+)
