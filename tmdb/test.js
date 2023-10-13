@@ -2,7 +2,7 @@ require("dotenv").config();
 const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
-const TMDB_RAT = `Bearer ${process.env.TMDB_RAT}`;
+const TMDB_RAT = process.env.TMDB_RAT;
 
 const url =
 	"https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=true&sort_by=primary_release_date.asc&with_genres=16&with_keywords=210024";
@@ -10,7 +10,7 @@ const options = {
 	method: "GET",
 	headers: {
 		accept: "application/json",
-		Authorization: TMDB_RAT,
+		Authorization: `Bearer ${TMDB_RAT}`,
 	},
 };
 
