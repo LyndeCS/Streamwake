@@ -7,8 +7,6 @@ const TMDB_RAT = process.env.TMDB_RAT;
 const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PW = process.env.DB_PW;
-const TOTAL_PAGES = 159;
-const { Shows } = require("./models");
 const Bottleneck = require("bottleneck");
 
 const limiter = new Bottleneck({
