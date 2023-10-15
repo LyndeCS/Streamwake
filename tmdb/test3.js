@@ -29,42 +29,25 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
 	dialect: "mysql",
 });
 
-// sequelize
-// 	.authenticate()
-// 	.then(async () => {
-// 		console.log("Connection has been established successfully.");
+const recently_watched_ids = [
+	"207564",
+	"76758",
+	"43865",
+	"95479",
+	"100565",
+	"99778",
+	"206799",
+	"123542",
+	"61901",
+	"217766",
+	"201363",
+	"67075",
+	"92602",
+	"65249",
+	"93816",
+	"60863",
+];
 
-// 		for (let i = 6; i <= TOTAL_PAGES; i++) {
-// 			const url = `${base_url}&page=${i}`;
-// 			await limiter.schedule(async () => {
-// 				return fetch(url, options)
-// 					.then((res) => res.json())
-// 					.then(async (json) => {
-// 						const show_array = [];
-// 						for (const show of json.results) {
-// 							show_array.push({
-// 								tmdb_id: show["id"].toString(),
-// 								title: show["name"],
-// 								poster_path: show["poster_path"],
-// 							});
-// 						}
-// 						try {
-// 							await Shows.bulkCreate(show_array);
-// 						} catch (e) {
-// 							console.log(e);
-// 						}
-// 					})
-// 					.then(() => {
-// 						console.log(`Page ${i} complete.\n`);
-// 					})
-// 					.catch((err) => {
-// 						console.error(
-// 							`Error fetching and storing data: ${err}\nCurrent page: ${i}`
-// 						);
-// 					});
-// 			});
-// 		}
-// 	})
-// 	.catch((error) => {
-// 		console.error("Unable to connect to the database: ", error);
-// 	});
+sequelize.authenticate().then(async () => {
+	for (const i = 0; i < recently_watched_ids.length; ) {}
+});
