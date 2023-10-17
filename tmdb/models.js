@@ -9,263 +9,235 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
 	dialect: "mysql",
 });
 
-const Users = sequelize.define(
+// Define the "users" model
+const User = sequelize.define(
 	"users",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		discord_id: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
-		username: {
-			type: Sequelize.STRING(255),
-			allowNull: true,
-		},
-		name: {
-			type: Sequelize.STRING(255),
-			allowNull: true,
-		},
+		discord_id: DataTypes.STRING,
+		username: DataTypes.STRING,
+		name: DataTypes.STRING,
 	},
 	{
+		tableName: "users",
 		timestamps: true,
 	}
 );
 
-const ShowServices = sequelize.define(
+// Define the "show_services" model
+const ShowService = sequelize.define(
 	"show_services",
 	{
 		service_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 		show_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
-		url: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
+		url: DataTypes.STRING,
 	},
 	{
-		primaryKey: true,
+		tableName: "show_services",
 		timestamps: true,
 	}
 );
 
-const Episodes = sequelize.define(
+// Define the "episodes" model
+const Episode = sequelize.define(
 	"episodes",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		show_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
-		season_number: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
-		episode_number: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
-		title: {
-			type: Sequelize.STRING(255),
-			allowNull: true,
-		},
-		air_date: {
-			type: Sequelize.DATE,
-			allowNull: true,
-		},
-		description: {
-			type: Sequelize.STRING(512),
-			allowNull: true,
-		},
+		season_id: DataTypes.INTEGER,
+		episode_number: DataTypes.INTEGER,
+		title: DataTypes.STRING,
+		air_date: DataTypes.DATE,
+		description: DataTypes.STRING,
 	},
 	{
+		tableName: "episodes",
 		timestamps: true,
 	}
 );
 
+// Define the "watchlist" model
 const Watchlist = sequelize.define(
 	"watchlist",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		episode_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
-		position: {
-			type: Sequelize.TINYINT,
-			allowNull: false,
-		},
+		episode_id: DataTypes.INTEGER,
+		position: DataTypes.TINYINT,
 	},
-	{ tableName: "watchlist", timestamps: true }
+	{
+		tableName: "watchlist",
+		timestamps: true,
+	}
 );
 
-const Suggestions = sequelize.define(
+// Define the "suggestions" model
+const Suggestion = sequelize.define(
 	"suggestions",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		show_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
+		show_id: DataTypes.INTEGER,
 	},
 	{
+		tableName: "suggestions",
 		timestamps: true,
 	}
 );
 
-const EpisodeLinks = sequelize.define(
+// Define the "episode_links" model
+const EpisodeLink = sequelize.define(
 	"episode_links",
 	{
 		episode_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 		service_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
-		url: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
+		url: DataTypes.STRING,
 	},
 	{
-		primaryKey: true,
+		tableName: "episode_links",
 		timestamps: true,
 	}
 );
 
-const Shows = sequelize.define(
+// Define the "shows" model
+const Show = sequelize.define(
 	"shows",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		tmdb_id: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
-		title: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
-		poster_path: {
-			type: Sequelize.STRING(255),
-			allowNull: true,
-		},
+		tmdb_id: DataTypes.STRING,
+		title: DataTypes.STRING,
+		poster_path: DataTypes.STRING,
 	},
 	{
+		tableName: "shows",
 		timestamps: true,
 	}
 );
 
-const Votes = sequelize.define(
+// Define the "votes" model
+const Vote = sequelize.define(
 	"votes",
 	{
 		user_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 		suggestion_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 	},
 	{
-		primaryKey: true,
+		tableName: "votes",
 		timestamps: true,
 	}
 );
 
-const Services = sequelize.define(
+// Define the "seasons" model
+const Season = sequelize.define(
+	"seasons",
+	{
+		id: {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		tmdb_id: DataTypes.STRING,
+		show_id: DataTypes.INTEGER,
+		number: DataTypes.SMALLINT,
+		title: DataTypes.STRING,
+		poster_path: DataTypes.STRING,
+	},
+	{
+		tableName: "seasons",
+		timestamps: true,
+	}
+);
+
+// Define the "services" model
+const Service = sequelize.define(
 	"services",
 	{
 		id: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
-			allowNull: false,
 		},
-		title: {
-			type: Sequelize.STRING(255),
-			allowNull: false,
-		},
-		priority: {
-			type: Sequelize.TINYINT,
-			allowNull: true,
-		},
+		title: DataTypes.STRING,
+		priority: DataTypes.TINYINT,
 	},
 	{
+		tableName: "services",
 		timestamps: true,
 	}
 );
 
-const UserEpisodes = sequelize.define(
+// Define the "user_episodes" model
+const UserEpisode = sequelize.define(
 	"user_episodes",
 	{
 		user_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 		episode_id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
-		watched_date: {
-			type: Sequelize.DATE,
-			allowNull: true,
-		},
+		watched_date: DataTypes.DATE,
 	},
 	{
-		primaryKey: true,
+		tableName: "user_episodes",
 		timestamps: true,
 	}
 );
 
-// Define associations between models
-Episodes.belongsTo(Shows, { foreignKey: "show_id" });
-EpisodeLinks.belongsTo(Services, { foreignKey: "service_id" });
-Votes.belongsTo(Users, { foreignKey: "user_id" });
-UserEpisodes.belongsTo(Users, { foreignKey: "user_id" });
-UserEpisodes.belongsTo(Episodes, { foreignKey: "episode_id" });
-Watchlist.belongsTo(Episodes, { foreignKey: "episode_id" });
-ShowServices.belongsTo(Services, { foreignKey: "service_id" });
-ShowServices.belongsTo(Shows, { foreignKey: "show_id" });
-EpisodeLinks.belongsTo(Episodes, { foreignKey: "episode_id" });
-UserEpisodes.belongsTo(Episodes, { foreignKey: "episode_id" });
-Suggestions.belongsTo(Shows, { foreignKey: "show_id" });
-Votes.belongsTo(Suggestions, { foreignKey: "suggestion_id" });
+// Define associations (foreign keys) between models
+User.hasMany(UserEpisode, { foreignKey: "user_id" });
+UserEpisode.belongsTo(User, { foreignKey: "user_id" });
+Watchlist.belongsTo(Episode, { foreignKey: "episode_id" });
+Episode.belongsTo(Season, { foreignKey: "season_id" });
+ShowService.belongsTo(Service, { foreignKey: "service_id" });
+ShowService.belongsTo(Show, { foreignKey: "show_id" });
+EpisodeLink.belongsTo(Service, { foreignKey: "service_id" });
+EpisodeLink.belongsTo(Episode, { foreignKey: "episode_id" });
+Suggestion.belongsTo(Show, { foreignKey: "id" });
+Vote.belongsTo(User, { foreignKey: "user_id" });
+Vote.belongsTo(Suggestion, { foreignKey: "suggestion_id" });
+Season.belongsTo(Show, { foreignKey: "show_id" });
 
 // Synchronize the models with the database
 sequelize
-	.sync()
+	.sync({ alter: true })
 	.then(() => {
 		console.log("Database and tables created!");
 	})
@@ -274,14 +246,16 @@ sequelize
 	});
 
 module.exports = {
-	Users,
-	ShowServices,
-	Episodes,
+	sequelize,
+	User,
+	ShowService,
+	Episode,
 	Watchlist,
-	Suggestions,
-	EpisodeLinks,
-	Shows,
-	Votes,
-	Services,
-	UserEpisodes,
+	Suggestion,
+	EpisodeLink,
+	Show,
+	Vote,
+	Season,
+	Service,
+	UserEpisode,
 };
