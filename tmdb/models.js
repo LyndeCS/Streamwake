@@ -58,11 +58,34 @@ const Episode = sequelize.define(
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		season_id: DataTypes.INTEGER,
-		episode_number: DataTypes.INTEGER,
-		title: DataTypes.STRING,
-		air_date: DataTypes.DATE,
-		description: DataTypes.STRING,
+		tmdb_id: {
+			type: Sequelize.STRING(255),
+			allowNull: false,
+		},
+		season_id: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+		},
+		episode_number: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+		},
+		title: {
+			type: Sequelize.STRING(255),
+			allowNull: true,
+		},
+		air_date: {
+			type: Sequelize.DATE,
+			allowNull: true,
+		},
+		description: {
+			type: Sequelize.STRING(1024),
+			allowNull: true,
+		},
+		runtime: {
+			type: Sequelize.FLOAT(8, 2),
+			allowNull: true,
+		},
 	},
 	{
 		tableName: "episodes",
@@ -134,8 +157,8 @@ const Show = sequelize.define(
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		tmdb_id: DataTypes.STRING,
-		title: DataTypes.STRING,
+		tmdb_id: { type: DataTypes.STRING, allowNull: false },
+		title: { type: DataTypes.STRING, allowNull: false },
 		poster_path: DataTypes.STRING,
 	},
 	{
@@ -235,12 +258,13 @@ Suggestion.belongsTo(Show, { foreignKey: "id" });
 Vote.belongsTo(User, { foreignKey: "user_id" });
 Vote.belongsTo(Suggestion, { foreignKey: "suggestion_id" });
 Season.belongsTo(Show, { foreignKey: "show_id" });
+Show.hasMany(Season, { foreignKey: "show_id" });
 
 // Synchronize the models with the database
 sequelize
 	.sync()
 	.then(() => {
-		console.log("Database and tables created!");
+		console.log("Synchronizing complete.");
 	})
 	.catch((error) => {
 		console.error("Error synchronizing the database:", error);

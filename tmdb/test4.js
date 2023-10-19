@@ -23,58 +23,51 @@ const options = {
 sequelize
 	.authenticate()
 	.then(() => {
+		// Query the Seasons table to retrieve records with show_id
 		Season.findAll({
-			attributes: ["tmdb_id"],
-		}).then((seasons) => {
-			const tmdbIds = seasons.map((season) => season.tmdb_id);
-			console.log(tmdbIds);
-		});
+			attributes: ["show_id", "tmdb_id"], // Retrieve show_id and tmdb_id
+		})
+			.then((seasons) => {
+				// Extract the show_id and tmdb_id values from Season records
+				const seasonData = seasons.map((season) => ({
+					showId: season.show_id,
+					seasonTmdbId: season.tmdb_id,
+				}));
+
+				// Create an array to store objects with show_id and tmdb_id from Shows table
+				const combinedData = [];
+
+				// Query the Shows table to retrieve tmdb_id for each show_id
+				Promise.all(
+					seasonData.map((season) => {
+						return Show.findOne({
+							where: { id: season.showId },
+							attributes: ["tmdb_id"],
+						}).then((show) => {
+							if (show) {
+								combinedData.push({
+									showId: season.showId,
+									showTmdbId: show.tmdb_id,
+									seasonTmdbId: season.seasonTmdbId,
+								});
+							}
+						});
+					})
+				)
+					.then(() => {
+						// Now we fetch episode data using show/season ids
+						for (const seasonObj of combinedData) {
+							console.log(seasonObj);
+						}
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	})
-	// .then(async () => {
-	// 	for (let i = 2; i < recently_watched_ids.length; i++) {
-	// 		const url = `${base_url}${recently_watched_ids[i]}`;
-	// 		await limiter.schedule(async () => {
-	// 			return fetch(url, options)
-	// 				.then((res) => res.json())
-	// 				.then(async (season_data) => {
-	// 					Show.findOne({
-	// 						where: {
-	// 							tmdb_id: recently_watched_ids[i],
-	// 						},
-	// 					})
-	// 						.then((show) => {
-	// 							if (show) {
-	// 								const showId = show.id;
-	// 								const season_data_array = [];
-	// 								for (const season of season_data.seasons) {
-	// 									if (season.name !== "Specials") {
-	// 										season_data_array.push({
-	// 											tmdb_id: season["id"].toString(),
-	// 											show_id: showId,
-	// 											number: season.season_number,
-	// 											title: season.name,
-	// 											poster_path: season.poster_path,
-	// 										});
-	// 									}
-	// 								}
-	// 								return Season.bulkCreate(season_data_array);
-	// 							} else {
-	// 								console.log("Show not found with tmdb_id:", tmdbIdToFind);
-	// 							}
-	// 						})
-	// 						.then((bulk_create_return) => {
-	// 							console.log(bulk_create_return);
-	// 						})
-	// 						.catch((error) => {
-	// 							console.error("Error:", error);
-	// 						});
-	// 				})
-	// 				.catch((err) => {
-	// 					console.error(`${err}`);
-	// 				});
-	// 		});
-	// 	}
-	// })
 	.catch((error) => {
 		console.error("Unable to connect to the database: ", error);
 	});
