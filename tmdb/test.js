@@ -1,9 +1,5 @@
 require("dotenv").config();
-const fetch = require("node-fetch");
-const fs = require("fs");
-const path = require("path");
 const Sequelize = require("sequelize");
-const TMDB_RAT = process.env.TMDB_RAT;
 const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PW = process.env.DB_PW;
@@ -57,16 +53,16 @@ const user_array = [
 	},
 ];
 
-sequelize
-	.authenticate()
-	.then(() => {
-		console.log("Connection has been established successfully.");
-		try {
-			Users.bulkCreate(user_array);
-		} catch (e) {
-			console.log(e);
-		}
-	})
-	.catch((error) => {
-		console.error("Unable to connect to the database: ", error);
-	});
+// sequelize
+// 	.authenticate()
+// 	.then(() => {
+// 		console.log("Connection has been established successfully.");
+// 		try {
+// 			Users.bulkCreate(user_array);
+// 		} catch (e) {
+// 			console.log(e);
+// 		}
+// 	})
+// 	.catch((error) => {
+// 		console.error("Unable to connect to the database: ", error);
+// 	});

@@ -1,13 +1,11 @@
 require("dotenv").config();
 const fetch = require("node-fetch");
-const fs = require("fs");
-const path = require("path");
 const Sequelize = require("sequelize");
 const TMDB_RAT = process.env.TMDB_RAT;
 const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PW = process.env.DB_PW;
-const { Shows } = require("./models");
+const { Show, Season } = require("./models");
 const Bottleneck = require("bottleneck");
 
 const limiter = new Bottleneck({
@@ -48,25 +46,53 @@ const recently_watched_ids = [
 	"60863",
 ];
 
-sequelize
-	.authenticate()
-	.then(() => {
-		// for (const i = 0; i < recently_watched_ids.length; i++) {}
-		const url = `${base_url}95479`;
-		const episode_group = `https://api.themoviedb.org/3/tv/episode_group/{tv_episode_group_id}`;
-		const episode_url = `https://api.themoviedb.org/3/tv/95479/season/2/episode/1`;
-		fetch(url, options)
-			.then((res) => res.json())
-			.then((show) => {
-				// console.log(`Name: ${show.name}`);
-				// console.log(`Seasons: ${show.number_of_seasons}`);
-				// console.log(`Episodes: ${show.number_of_episodes}`);
-				console.log(show.seasons);
-			})
-			.catch((err) => {
-				console.error(`${err}`);
-			});
-	})
-	.catch((error) => {
-		console.error("Unable to connect to the database: ", error);
-	});
+// sequelize
+// 	.authenticate()
+// 	.then(async () => {
+// 		for (let i = 2; i < recently_watched_ids.length; i++) {
+// 			const url = `${base_url}${recently_watched_ids[i]}`;
+// 			await limiter.schedule(async () => {
+// 				return fetch(url, options)
+// 					.then((res) => res.json())
+// 					.then(async (season_data) => {
+// 						Show.findOne({
+// 							where: {
+// 								tmdb_id: recently_watched_ids[i],
+// 							},
+// 						})
+// 							.then((show) => {
+// 								if (show) {
+// 									const showId = show.id;
+// 									const season_data_array = [];
+// 									for (const season of season_data.seasons) {
+// 										if (season.name !== "Specials") {
+// 											season_data_array.push({
+// 												tmdb_id: season["id"].toString(),
+// 												show_id: showId,
+// 												number: season.season_number,
+// 												title: season.name,
+// 												poster_path: season.poster_path,
+// 											});
+// 										}
+// 									}
+// 									return Season.bulkCreate(season_data_array);
+// 								} else {
+// 									console.log("Show not found with tmdb_id:", tmdbIdToFind);
+// 								}
+// 							})
+// 							.then((bulk_create_return) => {
+// 								console.log(bulk_create_return);
+// 							})
+// 							.catch((error) => {
+// 								console.error("Error:", error);
+// 							});
+// 					})
+// 					.catch((err) => {
+// 						console.error(`${err}`);
+// 					});
+// 			});
+// 		}
+// 	})
+// 	.catch((error) => {
+// 		console.error("Unable to connect to the database: ", error);
+// 	});

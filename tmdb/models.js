@@ -2,11 +2,12 @@ require("dotenv").config();
 const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PW = process.env.DB_PW;
-const Sequelize = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
 	host: "localhost",
 	dialect: "mysql",
+	logging: false,
 });
 
 // Define the "users" model
@@ -237,7 +238,7 @@ Season.belongsTo(Show, { foreignKey: "show_id" });
 
 // Synchronize the models with the database
 sequelize
-	.sync({ alter: true })
+	.sync()
 	.then(() => {
 		console.log("Database and tables created!");
 	})

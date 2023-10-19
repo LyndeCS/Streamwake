@@ -1,7 +1,5 @@
 require("dotenv").config();
 const fetch = require("node-fetch");
-const fs = require("fs");
-const path = require("path");
 const Sequelize = require("sequelize");
 const TMDB_RAT = process.env.TMDB_RAT;
 const DB_NAME = process.env.DB_NAME;
@@ -31,42 +29,42 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
 	dialect: "mysql",
 });
 
-sequelize
-	.authenticate()
-	.then(async () => {
-		console.log("Connection has been established successfully.");
+// sequelize
+// 	.authenticate()
+// 	.then(async () => {
+// 		console.log("Connection has been established successfully.");
 
-		for (let i = 6; i <= TOTAL_PAGES; i++) {
-			const url = `${base_url}&page=${i}`;
-			await limiter.schedule(async () => {
-				return fetch(url, options)
-					.then((res) => res.json())
-					.then(async (json) => {
-						const show_array = [];
-						for (const show of json.results) {
-							show_array.push({
-								tmdb_id: show["id"].toString(),
-								title: show["name"],
-								poster_path: show["poster_path"],
-							});
-						}
-						try {
-							await Shows.bulkCreate(show_array);
-						} catch (e) {
-							console.log(e);
-						}
-					})
-					.then(() => {
-						console.log(`Page ${i} complete.\n`);
-					})
-					.catch((err) => {
-						console.error(
-							`Error fetching and storing data: ${err}\nCurrent page: ${i}`
-						);
-					});
-			});
-		}
-	})
-	.catch((error) => {
-		console.error("Unable to connect to the database: ", error);
-	});
+// 		for (let i = 6; i <= TOTAL_PAGES; i++) {
+// 			const url = `${base_url}&page=${i}`;
+// 			await limiter.schedule(async () => {
+// 				return fetch(url, options)
+// 					.then((res) => res.json())
+// 					.then(async (json) => {
+// 						const show_array = [];
+// 						for (const show of json.results) {
+// 							show_array.push({
+// 								tmdb_id: show["id"].toString(),
+// 								title: show["name"],
+// 								poster_path: show["poster_path"],
+// 							});
+// 						}
+// 						try {
+// 							await Shows.bulkCreate(show_array);
+// 						} catch (e) {
+// 							console.log(e);
+// 						}
+// 					})
+// 					.then(() => {
+// 						console.log(`Page ${i} complete.\n`);
+// 					})
+// 					.catch((err) => {
+// 						console.error(
+// 							`Error fetching and storing data: ${err}\nCurrent page: ${i}`
+// 						);
+// 					});
+// 			});
+// 		}
+// 	})
+// 	.catch((error) => {
+// 		console.error("Unable to connect to the database: ", error);
+// 	});
