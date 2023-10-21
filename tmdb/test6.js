@@ -29,14 +29,14 @@ fs.createReadStream("C:/discord_bot_projects/Streamwake/tmdb/animaturday.csv")
 	.on("end", () => {
 		// Organize and display the data
 		for (const username in users) {
-			const user = users[username];
-			console.log(`User: ${user.Name} (${user.Username})`);
-
-			for (const show in user.Shows) {
-				const episodes = user.Shows[show];
-				console.log(`- ${show}: ${episodes.join(", ")}`);
+			if (username !== "Website") {
+				const user = users[username];
+				console.log(`User: ${user.Name} (${user.Username})`);
+				for (const show in user.Shows) {
+					const episodes = user.Shows[show];
+					console.log(`- ${show}: ${episodes.join(", ")}`);
+				}
+				console.log();
 			}
-
-			console.log();
 		}
 	});
