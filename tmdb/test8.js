@@ -34,6 +34,8 @@ fs.createReadStream(csvFilePath)
 				episodeNumber += 24;
 			}
 
+			if (seasonNumber != 2) continue;
+
 			// Get the show title from the header (column name)
 			const showTitle = column;
 

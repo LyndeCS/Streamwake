@@ -32,7 +32,7 @@ async function fetchAndStoreEpisodes(seriesId, seasonNumber) {
 				await Episode.create({
 					tmdb_id: episode.id,
 					season_id: season.id,
-					episode_number: episode.episode_number,
+					number: episode.episode_number,
 					title: episode.name,
 					air_date: episode.air_date,
 					description: episode.overview,

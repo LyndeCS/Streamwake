@@ -66,7 +66,7 @@ const Episode = sequelize.define(
 			type: Sequelize.INTEGER,
 			allowNull: false,
 		},
-		episode_number: {
+		number: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
 		},
@@ -259,6 +259,7 @@ Vote.belongsTo(User, { foreignKey: "user_id" });
 Vote.belongsTo(Suggestion, { foreignKey: "suggestion_id" });
 Season.belongsTo(Show, { foreignKey: "show_id" });
 Show.hasMany(Season, { foreignKey: "show_id" });
+Season.hasMany(Episode, { foreignKey: "season_id" });
 
 // Synchronize the models with the database
 sequelize
