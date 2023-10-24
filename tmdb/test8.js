@@ -34,8 +34,6 @@ fs.createReadStream(csvFilePath)
 				episodeNumber += 24;
 			}
 
-			if (seasonNumber != 2) continue;
-
 			// Get the show title from the header (column name)
 			const showTitle = column;
 
@@ -95,5 +93,6 @@ fs.createReadStream(csvFilePath)
 				.catch((error) => {
 					console.error("Error creating UserEpisode records:", error);
 				});
-		}, 9000);
+			console.log(userEpisodes);
+		}, 7000);
 	});

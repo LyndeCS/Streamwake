@@ -242,6 +242,12 @@ const UserEpisode = sequelize.define(
 	{
 		tableName: "user_episodes",
 		timestamps: true,
+		indexes: [
+			{
+				unique: true,
+				fields: ["user_id", "episode_id"],
+			},
+		],
 	}
 );
 
