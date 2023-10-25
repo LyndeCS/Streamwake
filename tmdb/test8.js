@@ -2,10 +2,8 @@ const fs = require("fs");
 const parse = require("csv-parser");
 const { Op } = require("sequelize");
 
-// Load your sequelize models and define the associations
-const { User, Episode, UserEpisode, Show, Season } = require("./models"); // Update with the actual models
+const { User, Episode, UserEpisode, Show, Season } = require("../models");
 
-// Define the path to your CSV file
 const csvFilePath = "C:/discord_bot_projects/Streamwake/tmdb/animaturday.csv";
 
 // Read the CSV file and create UserEpisode records
