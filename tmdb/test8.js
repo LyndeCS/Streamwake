@@ -44,6 +44,7 @@ fs.createReadStream(csvFilePath)
 							return;
 						}
 
+						// Todo: Seems awkward, look for more efficient way to do this
 						Episode.findOne({
 							where: { number: i },
 							include: [
