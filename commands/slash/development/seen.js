@@ -1,8 +1,8 @@
 require("dotenv").config();
-const clientManager = require("../../clientManager");
+const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
 const { SlashCommandBuilder } = require("discord.js");
-const { User, Episode, UserEpisode, Show, Season } = require("../../models");
+const { User, Episode, UserEpisode, Show, Season } = require("../../../models");
 
 module.exports = {
 	data: new SlashCommandBuilder()

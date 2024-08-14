@@ -1,35 +1,38 @@
 require("dotenv").config();
-const DB_NAME = process.env.DB_NAME;
-const DB_USER = process.env.DB_USER;
-const DB_PW = process.env.DB_PW;
+const DB_NAME = process.env.TEMP_DB_NAME;
+const DB_USER = process.env.TEMP_DB_USER;
+const DB_PW = process.env.TEMP_DB_PW;
 const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize(TEMP_DB_NAME, TEMP_DB_USER, TEMP_DB_PW, {
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
 	host: "localhost",
 	dialect: "mysql",
 	logging: false,
 });
 
 const TemporaryWatchlist = sequelize.define(
-	"temporaryWatchlist",
+	"watchlist",
 	{
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		showName: {
+		show_name: {
 			type: Sequelize.STRING,
 		},
-		seasonNumber: {
+		season_number: {
 			type: Sequelize.INTEGER,
 		},
-		episodeNumber: {
+		episode_number: {
 			type: Sequelize.INTEGER,
+		},
+		episode_name: {
+			type: Sequelize.STRING,
 		},
 	},
 	{
-		tableName: "temporary_watchlist",
+		tableName: "watchlist",
 		timestamps: false,
 	}
 );

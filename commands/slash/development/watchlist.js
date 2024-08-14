@@ -1,5 +1,5 @@
 require("dotenv").config();
-const clientManager = require("../../clientManager");
+const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
 const {
@@ -12,7 +12,7 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("wl")
+		.setName("watchlist")
 		.setDescription("Open watchlist UI."),
 	async execute(interaction) {
 		if (!admins.includes(interaction.user.id)) {

@@ -1,6 +1,5 @@
 require("dotenv").config();
-const wait = require("node:timers/promises").setTimeout;
-const clientManager = require("../../clientManager");
+const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
 const {
@@ -12,8 +11,8 @@ const {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("suggestionsbutton")
-		.setDescription("Open drop-down menu of suggested shows."),
+		.setName("recentlywatchedbutton")
+		.setDescription("Open drop-down menu of recently watched shows."),
 	async execute(interaction) {
 		// Command sent from non-owner
 		if (!admins.includes(interaction.user.id)) {
@@ -23,34 +22,23 @@ module.exports = {
 			});
 			return;
 		}
-		if (client.suggestedShowsList.length < 1) {
-			const reply = await interaction.reply({
-				content: "Suggested shows list is empty.",
-				ephemeral: true,
-			});
-			await wait(3000);
-			await reply.delete();
-			return;
-		}
 		/*==================================
-	        SUGGESTIONS BUTTON IS PRESSED
+	      RECENTLY WATCHED BUTTON IS PRESSED
         ====================================*/
 
-		// Build Suggestions Drop Down Menu
-		const suggestionsMenu = new StringSelectMenuBuilder()
-			.setCustomId("selectSuggestedShow")
+		// Build Drop Down Menu
+		const recentlyWatchedMenu = new StringSelectMenuBuilder()
+			.setCustomId("selectRecentShow")
 			.setPlaceholder("Select a show");
-		const suggestedShows = client.suggestedShowsList;
-		for (let i = 0; i < suggestedShows.length; i++) {
-			suggestionsMenu.addOptions(
+		for (let i = 0; i < client.recentShowsDropdownList.length; i++) {
+			recentlyWatchedMenu.addOptions(
 				new StringSelectMenuOptionBuilder()
-					.setLabel(suggestedShows[i]["showName"])
-					.setValue(suggestedShows[i]["showName"])
+					.setLabel(client.recentShowsDropdownList[i]["showName"])
+					.setValue(client.recentShowsDropdownList[i]["showName"])
 			);
 		}
-
 		const receivedActionRow = interaction.message.components[0];
-		const menuRow = new ActionRowBuilder().addComponents(suggestionsMenu);
+		const menuRow = new ActionRowBuilder().addComponents(recentlyWatchedMenu);
 
 		await interaction.deferUpdate();
 		await interaction.message.edit({
