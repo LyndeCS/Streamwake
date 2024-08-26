@@ -1,11 +1,8 @@
-require("dotenv").config();
-const db = process.env.DB_NAME;
-const db_user = process.env.DB_USER;
-const db_pw = process.env.DB_PW;
 const Sequelize = require("sequelize");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
+const config = require("./config");
 
 class ClientManager {
 	constructor() {
@@ -16,13 +13,19 @@ class ClientManager {
 				GatewayIntentBits.MessageContent,
 				GatewayIntentBits.GuildMembers,
 				GatewayIntentBits.GuildVoiceStates,
+				GatewayIntentBits.GuildScheduledEvents,
 			],
 		});
 
-		this.sequelize = new Sequelize(db, db_user, db_pw, {
-			host: "localhost",
-			dialect: "mysql",
-		});
+		this.sequelize = new Sequelize(
+			config.db.tempName,
+			config.db.tempUser,
+			config.db.tempPassword,
+			{
+				host: "localhost",
+				dialect: "mysql",
+			}
+		);
 
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();

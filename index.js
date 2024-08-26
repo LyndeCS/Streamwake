@@ -1,5 +1,5 @@
 const clientManager = require("./clientManager");
-const config = require("./config.js"); // Import the config file
+const config = require("./config.js");
 
 // Load events before logging in
 clientManager.loadEvents();

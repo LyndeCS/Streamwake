@@ -1,43 +1,43 @@
 {
-  "name": "streamwake",
-  "version": "1.0.0",
-  "description": "discord bot to track anime episodes watched with friends",
-  "main": "index.js",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=dev node index.js",
-    "prod": "cross-env NODE_ENV=prod node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LyndeCS/Streamwake.git"
-  },
-  "keywords": [
-    "discord",
-    "bot",
-    "anime",
-    "episode",
-    "tracking",
-    "viewer",
-    "audit"
-  ],
-  "author": "Christopher Lynde",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LyndeCS/Streamwake/issues"
-  },
-  "homepage": "https://github.com/LyndeCS/Streamwake#readme",
-  "dependencies": {
-    "bottleneck": "^2.19.5",
-    "csv-parser": "^3.0.0",
-    "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1",
-    "mysql2": "^3.6.1",
-    "node-fetch": "^2.7.0",
-    "sequelize": "^6.33.0",
-    "sqlite3": "^5.1.6"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "eslint": "^8.47.0"
-  }
+	"name": "streamwake",
+	"version": "1.0.0",
+	"description": "discord bot to track anime episodes watched with friends",
+	"main": "index.js",
+	"scripts": {
+		"dev": "cross-env NODE_ENV=dev node index.js",
+		"prod": "cross-env NODE_ENV=prod node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LyndeCS/Streamwake.git"
+	},
+	"keywords": [
+		"discord",
+		"bot",
+		"anime",
+		"episode",
+		"tracking",
+		"viewer",
+		"audit"
+	],
+	"author": "Christopher Lynde",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/LyndeCS/Streamwake/issues"
+	},
+	"homepage": "https://github.com/LyndeCS/Streamwake#readme",
+	"dependencies": {
+		"bottleneck": "^2.19.5",
+		"csv-parser": "^3.0.0",
+		"discord.js": "^14.13.0",
+		"dotenv": "^16.3.1",
+		"mysql2": "^3.6.1",
+		"node-fetch": "^2.7.0",
+		"sequelize": "^6.33.0",
+		"cross-env": "^7.0.3",
+		"sqlite3": "^5.1.6"
+	},
+	"devDependencies": {
+		"eslint": "^8.47.0"
+	}
 }
