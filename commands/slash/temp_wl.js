@@ -11,7 +11,7 @@ module.exports = {
 	async execute(interaction) {
 		const watchlistItems = await wl.findAll();
 
-		let responseText = "Aug 31 Watchlist:\n";
+		let responseText = "Sept 7 Watchlist:\n";
 		watchlistItems.forEach((item) => {
 			responseText += `- ${item.show_name} - S${item.season_number}E${item.episode_number}: ${item.episode_name}\n`;
 		});
