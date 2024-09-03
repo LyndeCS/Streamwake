@@ -5,7 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "cross-env NODE_ENV=dev node index.js",
-		"prod": "cross-env NODE_ENV=prod node index.js"
+		"prod": "cross-env NODE_ENV=prod node index.js",
+		"deploy-commands-dev": "cross-env NODE_ENV=dev node deploy-commands.js",
+		"deploy-commands-prod": "cross-env NODE_ENV=prod node deploy-commands.js"
 	},
 	"repository": {
 		"type": "git",
