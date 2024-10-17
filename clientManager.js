@@ -22,7 +22,7 @@ class ClientManager {
 			config.db.tempUser,
 			config.db.tempPassword,
 			{
-				host: "localhost",
+				host: config.db.host,
 				dialect: "mysql",
 			}
 		);

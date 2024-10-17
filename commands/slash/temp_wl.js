@@ -13,7 +13,8 @@ module.exports = {
 
 		let responseText = "Sept 7 Watchlist:\n";
 		watchlistItems.forEach((item) => {
-			responseText += `- ${item.show_name} - S${item.season_number}E${item.episode_number}: ${item.episode_name}\n`;
+			// responseText += `- ${item.show_name} - S${item.season_number}E${item.episode_number}: ${item.episode_name}\n`;
+			responseText += `- ${item.show_name}: S${item.season_number}E${item.episode_number}\n`;
 		});
 
 		await interaction.reply({ content: responseText, ephemeral: true });
