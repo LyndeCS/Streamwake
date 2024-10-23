@@ -1,6 +1,7 @@
 .*
 !.gitignore
 logs
+node_modules/
 
 # Compiled source #
 ###################

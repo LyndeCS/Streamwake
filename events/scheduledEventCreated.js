@@ -15,7 +15,8 @@ module.exports = {
 
 			let eventDescription = "";
 			watchlistItems.forEach((item) => {
-				eventDescription += `- ${item.show_name} - S${item.season_number}E${item.episode_number}: ${item.episode_name}\n`;
+				// eventDescription += `- ${item.show_name} - S${item.season_number}E${item.episode_number}: ${item.episode_name}\n`;
+                                eventDescription += `- ${item.show_name}: S${item.season_number}E${item.episode_number}\n`;
 			});
 
 			// Update the event description
