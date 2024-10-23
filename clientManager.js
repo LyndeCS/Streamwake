@@ -228,6 +228,12 @@ class ClientManager {
 			}
 		}
 	}
+
+	loadCronJobs() {
+		const cronJobs = require("./schedulers/cronJobs");
+		cronJobs;
+		console.log("cron jobs scheduled.");
+	}
 }
 
 module.exports = new ClientManager();
