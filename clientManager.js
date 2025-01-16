@@ -24,6 +24,7 @@ class ClientManager {
 			{
 				host: config.db.host,
 				dialect: "mysql",
+				logging: console.log,
 			}
 		);
 
