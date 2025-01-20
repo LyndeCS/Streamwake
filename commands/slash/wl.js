@@ -41,6 +41,31 @@ module.exports = {
 						.setName("show")
 						.setDescription("Name of the show")
 						.setRequired(true)
+						.setAutocomplete(true)
+				)
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("update")
+				.setDescription("Update a show's details in the watchlist")
+				.addStringOption((option) =>
+					option
+						.setName("show")
+						.setDescription("Name of the show to update")
+						.setRequired(true)
+						.setAutocomplete(true)
+				)
+				.addIntegerOption((option) =>
+					option
+						.setName("season")
+						.setDescription("New season number")
+						.setRequired(false)
+				)
+				.addIntegerOption((option) =>
+					option
+						.setName("episode")
+						.setDescription("New episode number")
+						.setRequired(true)
 				)
 		)
 		.addSubcommand((subcommand) =>
@@ -57,9 +82,9 @@ module.exports = {
 					// Add a new show to the watchlist
 					const newShow = await wl.create({
 						show_name: showName,
-						season_number: seasonNumber, // Default season number; you can make this dynamic if needed
-						episode_number: episodeNumber, // Default episode number; you can make this dynamic if needed
-						episode_name: null, // Default to null if not specified
+						season_number: seasonNumber,
+						episode_number: episodeNumber,
+						episode_name: null,
 					});
 
 					// Respond to the user

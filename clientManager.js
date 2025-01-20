@@ -28,6 +28,8 @@ class ClientManager {
 			}
 		);
 
+		this.cachedWatchlist = [];
+
 		this.client.commands = new Collection();
 		this.client.loggingStates = new Collection();
 		this.client.watchList = [];
@@ -234,6 +236,22 @@ class ClientManager {
 		const cronJobs = require("./schedulers/cronJobs");
 		cronJobs;
 		console.log("cron jobs scheduled.");
+	}
+
+	async loadWatchlist(models) {
+		try {
+			const watchlistItems = await models.wl.findAll({
+				attributes: ["show_name"],
+			});
+			this.cachedWatchlist = watchlistItems.map((item) => item.show_name);
+			console.log("Watchlist cached:", this.cachedWatchlist);
+		} catch (error) {
+			console.error("Error loading watchlist:", error);
+		}
+	}
+
+	getCachedWatchlist() {
+		return this.cachedWatchlist;
 	}
 }
 
