@@ -1,11 +1,6 @@
-// Import the clientManager to use the already established Sequelize connection
-const clientManager = require("./clientManager");
-
-// Access the Sequelize instance from clientManager
 const { DataTypes } = require("sequelize");
-const sequelize = clientManager.sequelize;
+const sequelize = require("./db");
 
-// Define the TemporaryWatchlist model
 const TemporaryWatchlist = sequelize.define(
 	"watchlist",
 	{
@@ -33,5 +28,4 @@ const TemporaryWatchlist = sequelize.define(
 	}
 );
 
-// Export the model for use in other parts of your application
 module.exports = TemporaryWatchlist;
