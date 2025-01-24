@@ -73,6 +73,12 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand.setName("show").setDescription("View the current watchlist")
 		),
+	permissions: {
+		add: ["admin", "moderator"],
+		remove: ["admin", "moderator"],
+		update: ["admin", "moderator"],
+		show: [],
+	},
 	async autocomplete(interaction) {
 		const focusedOption = interaction.options.getFocused(true);
 

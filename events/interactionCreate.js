@@ -1,6 +1,7 @@
 const { Events } = require("discord.js");
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
+const config = require("../config");
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -12,6 +13,49 @@ module.exports = {
 			);
 			return;
 		}
+
+		// PERMISSIONS
+		const subcommand = interaction.options.getSubcommand(false);
+
+		// Retrieve required roles from the command file
+		const requiredRoles = command.permissions?.[subcommand] || [];
+		const userId = interaction.user.id;
+
+		// Role-based permissions check
+		if (
+			requiredRoles.includes("admin") &&
+			!config.bot.adminArray.includes(userId)
+		) {
+			// Handle permission failure for all interaction types
+			if (interaction.isAutocomplete()) {
+				await interaction.respond([]);
+			} else {
+				await interaction.reply({
+					content: "You need admin permissions to use this command.",
+					ephemeral: true,
+				});
+			}
+			return;
+		}
+
+		if (
+			requiredRoles.includes("moderator") &&
+			!config.bot.adminArray.includes(userId) &&
+			!config.bot.moderatorArray.includes(userId)
+		) {
+			// Handle permission failure for all interaction types
+			if (interaction.isAutocomplete()) {
+				await interaction.respond([]);
+			} else {
+				await interaction.reply({
+					content: "You need moderator permissions to use this command.",
+					ephemeral: true,
+				});
+			}
+			return;
+		}
+
+		// COMMAND EXECUTION
 
 		if (interaction.isAutocomplete()) {
 			try {

@@ -6,6 +6,7 @@ module.exports = {
 		clientId: process.env.CLIENT_ID,
 		guildId: process.env.GUILD_ID,
 		adminArray: process.env.ADMIN_ARRAY.split(","),
+		moderatorArray: process.env.MODERATOR_ARRAY.split(","),
 	},
 	db: {
 		host: process.env.HOST,
