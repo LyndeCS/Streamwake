@@ -1,6 +1,8 @@
 const cron = require("node-cron");
 const wl = require("../temp_models");
 
+// todo: refresh local cache so /wl show is up to date
+
 async function incrementEpisodeNumbers() {
 	try {
 		await wl.increment("episode_number", {
