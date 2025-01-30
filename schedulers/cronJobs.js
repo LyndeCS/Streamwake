@@ -1,7 +1,6 @@
 const cron = require("node-cron");
 const wl = require("../temp_models");
-
-// todo: refresh local cache so /wl show is up to date
+const client = require("../clientManager");
 
 async function incrementEpisodeNumbers() {
 	try {
@@ -30,4 +29,5 @@ async function decrementEpisodeNumbers() {
 // Schedule the task to run every Sunday at 3AM
 cron.schedule("0 3 * * 0", async () => {
 	await incrementEpisodeNumbers();
+	client.loadWatchlist();
 });
