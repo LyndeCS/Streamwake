@@ -1,4 +1,6 @@
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV || "dev"}` });
+require("dotenv").config({
+	path: `.env.${process.env.NODE_ENV || "development"}`,
+});
 
 module.exports = {
 	bot: {

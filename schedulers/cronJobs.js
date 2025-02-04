@@ -1,10 +1,11 @@
 const cron = require("node-cron");
-const wl = require("../temp_models");
+const db = require("../models");
+const Watchlist = db.Watchlist;
 const client = require("../clientManager");
 
 async function incrementEpisodeNumbers() {
 	try {
-		await wl.increment("episode_number", {
+		await Watchlist.increment("episode_number", {
 			by: 1,
 			where: {},
 		});
@@ -16,7 +17,7 @@ async function incrementEpisodeNumbers() {
 
 async function decrementEpisodeNumbers() {
 	try {
-		await wl.decrement("episode_number", {
+		await Watchlist.decrement("episode_number", {
 			by: 1,
 			where: {},
 		});

@@ -4,10 +4,10 @@
 	"description": "discord bot to track anime episodes watched with friends",
 	"main": "index.js",
 	"scripts": {
-		"dev": "cross-env NODE_ENV=dev node index.js",
-		"prod": "cross-env NODE_ENV=prod node index.js",
-		"deploy-commands-dev": "cross-env NODE_ENV=dev node deploy-commands.js",
-		"deploy-commands-prod": "cross-env NODE_ENV=prod node deploy-commands.js"
+		"dev": "cross-env NODE_ENV=development node index.js",
+		"prod": "cross-env NODE_ENV=production node index.js",
+		"deploy-commands-dev": "cross-env NODE_ENV=development node deploy-commands.js",
+		"deploy-commands-prod": "cross-env NODE_ENV=production node deploy-commands.js"
 	},
 	"repository": {
 		"type": "git",
@@ -42,6 +42,7 @@
 		"sqlite3": "^5.1.6"
 	},
 	"devDependencies": {
-		"eslint": "^8.47.0"
+		"eslint": "^8.47.0",
+		"sequelize-cli": "^6.6.2"
 	}
 }

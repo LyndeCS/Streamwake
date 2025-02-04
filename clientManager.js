@@ -177,8 +177,8 @@ class ClientManager {
 		return this.client;
 	}
 
-	setWatchlistModel(model) {
-		this.watchlistModel = model;
+	setWatchlistModel() {
+		this.watchlistModel = require("./models/watchlist")(sequelize);
 	}
 
 	loadCommands() {
