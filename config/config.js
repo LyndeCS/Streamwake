@@ -7,7 +7,7 @@ module.exports = {
 		username: process.env.TEMP_DB_USER,
 		password: process.env.TEMP_DB_PW,
 		database: process.env.TEMP_DB_NAME,
-		host: "137.184.65.250",
+		host: process.env.HOST,
 		dialect: "mysql",
 	},
 	production: {

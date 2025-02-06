@@ -21,6 +21,9 @@ module.exports = (sequelize) => {
 			episode_name: {
 				type: DataTypes.STRING,
 			},
+			position: {
+				type: DataTypes.INTEGER,
+			},
 		},
 		{
 			tableName: "watchlist",
