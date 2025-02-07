@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("wl")
 		.setDescription("Manage the watchlist")
-		// add subcommand
+		// ADD
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("add")
@@ -30,8 +30,15 @@ module.exports = {
 						.setDescription("Episode number")
 						.setRequired(false)
 				)
+				.addIntegerOption((option) =>
+					option
+						.setName("position")
+						.setDescription("Position in the watchlist")
+						.setRequired(false)
+						.setMinValue(1)
+				)
 		)
-		// remove subcommand
+		// REMOVE
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("remove")
@@ -44,7 +51,7 @@ module.exports = {
 						.setAutocomplete(true)
 				)
 		)
-		// update subcommand
+		// UPDATE
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("update")
@@ -69,7 +76,7 @@ module.exports = {
 						.setRequired(true)
 				)
 		)
-		// show subcommand
+		// SHOW
 		.addSubcommand((subcommand) =>
 			subcommand.setName("show").setDescription("View the current watchlist")
 		),
@@ -102,17 +109,21 @@ module.exports = {
 	},
 	async execute(interaction) {
 		const subcommandHandlers = {
-			// 'add' subcommand handler
+			// ADD
 			add: async () => {
 				const showName = interaction.options.getString("show");
 				const seasonNumber = interaction.options.getInteger("season") || 1;
 				const episodeNumber = interaction.options.getInteger("episode") || 1;
+				const watchlist = clientManager.getWatchlist();
+				const position =
+					interaction.options.getInteger("position") || watchlist.length + 1;
 
 				try {
 					const newShow = await clientManager.addShowToWatchlist({
 						show_name: showName,
 						season_number: seasonNumber,
 						episode_number: episodeNumber,
+						position: position,
 					});
 
 					await interaction.reply({
@@ -127,7 +138,7 @@ module.exports = {
 					});
 				}
 			},
-			// 'remove' subcommand handler
+			// REMOVE
 			remove: async () => {
 				const showName = interaction.options.getString("show");
 
@@ -152,7 +163,7 @@ module.exports = {
 					});
 				}
 			},
-			// 'show' subcommand handler
+			// SHOW
 			show: async () => {
 				const sortedWatchlist = clientManager
 					.getWatchlist()
@@ -195,6 +206,7 @@ module.exports = {
 
 				await interaction.reply({ content: output, ephemeral: true });
 			},
+			// UPDATE
 			update: async () => {
 				// Retrieve options from the interaction
 				const show_name = interaction.options.getString("show");

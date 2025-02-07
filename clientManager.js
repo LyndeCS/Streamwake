@@ -257,6 +257,7 @@ class ClientManager {
 		show_name,
 		season_number = 1,
 		episode_number = 1,
+		position,
 	}) {
 		try {
 			if (!this.watchlistModel) {
@@ -267,15 +268,20 @@ class ClientManager {
 				show_name,
 				season_number,
 				episode_number,
+				position,
 			});
+
 			this.watchlist.push({
 				show_name: createdShow.show_name,
 				season_number: createdShow.season_number,
 				episode_number: createdShow.episode_number,
+				position: createdShow.position,
 			});
+
 			console.log(
 				`Added "${show_name}" (Season ${season_number}, Episode ${episode_number}) to watchlist.`
 			);
+
 			return createdShow;
 		} catch (error) {
 			console.error("Error adding show to watchlist:", error);
