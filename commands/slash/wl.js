@@ -154,7 +154,32 @@ module.exports = {
 			},
 			// 'show' subcommand handler
 			show: async () => {
-				const watchlist = clientManager.getWatchlist();
+				const sortedWatchlist = clientManager
+					.getWatchlist()
+					.sort((a, b) => (a.position > b.position ? 1 : -1));
+
+				// CODE BLOCK FORMATTING
+				const maxShowTitleLength = Math.max(
+					...sortedWatchlist.map((item) => item.show_name.length)
+				);
+				// const maxEpisodeTitleLength = Math.max(
+				// 	...sortedWatchlist.map((item) => item.episodeTitle.length)
+				// );
+
+				let output = "```\n"; // Start code block
+				output += `#  | ${"Show Title".padEnd(maxShowTitleLength)} | S | E\n`;
+				//| ${"Episode Title".padEnd(maxEpisodeTitleLength)}
+				output += `---+${"-".repeat(maxShowTitleLength + 2)}+---+---\n`;
+				//|${"-".repeat(maxEpisodeTitleLength + 2)}
+
+				for (const item of sortedWatchlist) {
+					output += `${item.position}. | ${item.show_name.padEnd(
+						maxShowTitleLength
+					)} | ${item.season_number} | ${item.episode_number}\n`;
+					// | ${item.episodeTitle.padEnd(maxEpisodeTitleLength)}
+				}
+
+				output += "```";
 
 				// DATE
 				const today = new Date();
@@ -164,11 +189,11 @@ module.exports = {
 
 				// OUTPUT
 				let responseText = `${formattedDate} Watchlist:\n`;
-				watchlist.forEach((item) => {
-					responseText += `- ${item.show_name}: S${item.season_number}E${item.episode_number}\n`;
+				sortedWatchlist.forEach((item) => {
+					responseText += `${item.position}. ${item.show_name}: s${item.season_number} e${item.episode_number}\n`;
 				});
 
-				await interaction.reply({ content: responseText, ephemeral: true });
+				await interaction.reply({ content: output, ephemeral: true });
 			},
 			update: async () => {
 				// Retrieve options from the interaction
