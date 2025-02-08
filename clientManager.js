@@ -1,4 +1,4 @@
-const sequelize = require("./db");
+const { sequelize } = require("./models");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -259,18 +259,44 @@ class ClientManager {
 		episode_number = 1,
 		position,
 	}) {
+		const t = await sequelize.transaction(); // Start a transaction
+
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			const createdShow = await this.watchlistModel.create({
-				show_name,
-				season_number,
-				episode_number,
-				position,
+			// 1. Check if the position is already taken WITHIN the transaction
+			const existingShow = await this.watchlistModel.findOne({
+				where: { position },
+				transaction: t, // Use the transaction
+				lock: sequelize.Transaction.LOCK.EXCLUSIVE, // Row-level lock
 			});
 
+			if (existingShow) {
+				// 2. & 3. Shift positions WITHIN the transaction
+				await this.watchlistModel.increment(
+					{ position: 1 },
+					{
+						where: { position: { [sequelize.Op.gte]: position } },
+						transaction: t,
+						lock: sequelize.Transaction.LOCK.EXCLUSIVE, // Lock affected rows
+					}
+				);
+			}
+
+			// 4. Insert new show WITHIN the transaction
+			const createdShow = await this.watchlistModel.create(
+				{
+					show_name,
+					season_number,
+					episode_number,
+					position,
+				},
+				{ transaction: t }
+			);
+
+			// 5. Update local cache (after successful database insert)
 			this.watchlist.push({
 				show_name: createdShow.show_name,
 				season_number: createdShow.season_number,
@@ -278,12 +304,14 @@ class ClientManager {
 				position: createdShow.position,
 			});
 
+			await t.commit(); // Commit the transaction
+
 			console.log(
 				`Added "${show_name}" (Season ${season_number}, Episode ${episode_number}) to watchlist.`
 			);
-
 			return createdShow;
 		} catch (error) {
+			await t.rollback(); // Rollback the transaction on error
 			console.error("Error adding show to watchlist:", error);
 			throw error;
 		}

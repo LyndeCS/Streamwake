@@ -1,7 +1,7 @@
 const { Events } = require("discord.js");
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
-const config = require("../config");
+const config = require("../config/config.js");
 
 module.exports = {
 	name: Events.InteractionCreate,

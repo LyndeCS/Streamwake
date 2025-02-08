@@ -1,4 +1,4 @@
-const config = require("./config.js");
+const config = require("./config/config.js");
 const { REST, Routes } = require("discord.js");
 const clientId = config.bot.clientId;
 const guildId = config.bot.guildId;
