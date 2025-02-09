@@ -1,4 +1,5 @@
-const { sequelize } = require("./models");
+const { sequelize, Sequelize } = require("./models");
+const Op = Sequelize.Op;
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -270,7 +271,7 @@ class ClientManager {
 			const existingShow = await this.watchlistModel.findOne({
 				where: { position },
 				transaction: t, // Use the transaction
-				lock: sequelize.Transaction.LOCK.EXCLUSIVE, // Row-level lock
+				lock: t.LOCK.EXCLUSIVE, // Row-level lock
 			});
 
 			if (existingShow) {
@@ -278,9 +279,9 @@ class ClientManager {
 				await this.watchlistModel.increment(
 					{ position: 1 },
 					{
-						where: { position: { [sequelize.Op.gte]: position } },
+						where: { position: { [Sequelize.Op.gte]: position } },
 						transaction: t,
-						lock: sequelize.Transaction.LOCK.EXCLUSIVE, // Lock affected rows
+						lock: t.LOCK.EXCLUSIVE, // Lock affected rows
 					}
 				);
 			}
