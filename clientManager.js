@@ -267,7 +267,7 @@ class ClientManager {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			// 1. Check if the position is already taken WITHIN the transaction
+			// Check if the position is already taken WITHIN the transaction
 			const existingShow = await this.watchlistModel.findOne({
 				where: { position },
 				transaction: t, // Use the transaction
@@ -275,7 +275,7 @@ class ClientManager {
 			});
 
 			if (existingShow) {
-				// 2. & 3. Shift positions WITHIN the transaction
+				// Shift positions WITHIN the transaction
 				await this.watchlistModel.increment(
 					{ position: 1 },
 					{
@@ -286,7 +286,7 @@ class ClientManager {
 				);
 			}
 
-			// 4. Insert new show WITHIN the transaction
+			// Insert new show WITHIN the transaction
 			const createdShow = await this.watchlistModel.create(
 				{
 					show_name,
@@ -297,15 +297,11 @@ class ClientManager {
 				{ transaction: t }
 			);
 
-			// 5. Update local cache (after successful database insert)
-			this.watchlist.push({
-				show_name: createdShow.show_name,
-				season_number: createdShow.season_number,
-				episode_number: createdShow.episode_number,
-				position: createdShow.position,
-			});
+			// Commit transaction
+			await t.commit();
 
-			await t.commit(); // Commit the transaction
+			// Update local cache
+			this.loadWatchlist();
 
 			console.log(
 				`Added "${show_name}" (Season ${season_number}, Episode ${episode_number}) to watchlist.`
@@ -319,26 +315,52 @@ class ClientManager {
 	}
 
 	async removeShowFromWatchlist(showName) {
+		const t = await sequelize.transaction(); // Start a transaction
+
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			const deletedCount = await this.watchlistModel.destroy({
+			// Find the show by name WITHIN the transaction
+			const showToRemove = await this.watchlistModel.findOne({
 				where: { show_name: showName },
+				transaction: t,
+				lock: t.LOCK.EXCLUSIVE, // Row-level lock
 			});
 
-			if (deletedCount === 0) {
-				console.log(`Show "${showName}" not found in the database.`);
-				return false;
+			if (!showToRemove) {
+				throw new Error(`No show found with name "${showName}".`);
 			}
 
-			this.watchlist = this.watchlist.filter(
-				(item) => item.show_name !== showName
+			const { position } = showToRemove;
+
+			// Remove the show WITHIN the transaction
+			await this.watchlistModel.destroy({
+				where: { show_name: showName },
+				transaction: t,
+			});
+
+			// Shift remaining shows UP by decrementing their position
+			await this.watchlistModel.decrement(
+				{ position: 1 },
+				{
+					where: { position: { [Sequelize.Op.gt]: position } },
+					transaction: t,
+					lock: t.LOCK.EXCLUSIVE, // Lock affected rows
+				}
 			);
-			console.log(`Removed "${showName}" from watchlist.`);
+
+			// Commit transaction
+			await t.commit();
+
+			// Update local cache
+			this.loadWatchlist();
+
+			console.log(`Removed "${showName}" and adjusted positions.`);
 			return true;
 		} catch (error) {
+			await t.rollback(); // Rollback the transaction on error
 			console.error("Error removing show from watchlist:", error);
 			throw error;
 		}
