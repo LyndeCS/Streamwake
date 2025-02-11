@@ -67,13 +67,20 @@ module.exports = {
 					option
 						.setName("season")
 						.setDescription("New season number")
-						.setRequired(true)
+						.setRequired(false)
 				)
 				.addIntegerOption((option) =>
 					option
 						.setName("episode")
 						.setDescription("New episode number")
-						.setRequired(true)
+						.setRequired(false)
+				)
+				.addIntegerOption((option) =>
+					option
+						.setName("position")
+						.setDescription("Position in the watchlist")
+						.setRequired(false)
+						.setMinValue(1)
 				)
 		)
 		// SHOW
@@ -212,6 +219,7 @@ module.exports = {
 				const show_name = interaction.options.getString("show");
 				const season_number = interaction.options.getInteger("season");
 				const episode_number = interaction.options.getInteger("episode");
+				const position = interaction.options.getInteger("position");
 
 				// Proceed with updating the show in the watchlist
 				try {
@@ -232,7 +240,7 @@ module.exports = {
 					// Update the show in the database and cache
 					const updateResult = await clientManager.updateShowInWatchlist(
 						show_name,
-						{ season_number, episode_number }
+						{ show_name, season_number, episode_number, position }
 					);
 
 					if (updateResult.success) {
