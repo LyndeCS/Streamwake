@@ -243,13 +243,17 @@ module.exports = {
 						{ show_name, season_number, episode_number, position }
 					);
 
-					if (updateResult.success) {
+					if (updateResult) {
 						// Successfully updated
 						const updatedShow = clientManager
 							.getWatchlist()
 							.find((item) => item.show_name === show_name);
 						await interaction.reply({
-							content: `Successfully updated "${show_name}" to Season ${updatedShow.season_number}, Episode ${updatedShow.episode_number}.`,
+							content: `Successfully updated "${show_name}" to ${
+								season_number ? "Season: " + season_number + ", " : ""
+							} ${episode_number ? "Episode: " + episode_number + ", " : ""} ${
+								position ? "Position: " + position : ""
+							}.`,
 							ephemeral: true,
 						});
 					} else {

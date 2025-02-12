@@ -368,10 +368,10 @@ class ClientManager {
 
 	async updateShowInWatchlist(
 		showName,
-		{ newShowName, season_number, episode_number, position }
+		{ newShowName, seasonNumber, episodeNumber, newPosition }
 	) {
 		const t = await sequelize.transaction(); // Start a transaction
-
+		console.log("test");
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
@@ -390,22 +390,65 @@ class ClientManager {
 
 			const oldPosition = showToUpdate.position;
 			const isPositionChanged =
-				position !== undefined && position !== oldPosition;
+				newPosition !== undefined && newPosition !== oldPosition;
 
 			if (isPositionChanged) {
-				// Check if the new position is already taken
+				// Check if another show already occupies the new position
 				const conflictingShow = await this.watchlistModel.findOne({
-					where: { position },
+					where: { position: newPosition },
 					transaction: t,
 					lock: t.LOCK.EXCLUSIVE,
 				});
 
 				if (conflictingShow) {
-					// Shift existing shows down to make space
+					if (oldPosition < newPosition) {
+						// Moving DOWN (to a higher position) → decrement conflicting show's position
+						await this.watchlistModel.decrement(
+							{ position: 1 },
+							{
+								where: { position: newPosition },
+								transaction: t,
+								lock: t.LOCK.EXCLUSIVE,
+							}
+						);
+					} else {
+						// Moving UP (to a lower position) → increment conflicting show's position
+						await this.watchlistModel.increment(
+							{ position: 1 },
+							{
+								where: { position: newPosition },
+								transaction: t,
+								lock: t.LOCK.EXCLUSIVE,
+							}
+						);
+					}
+				}
+
+				// Shift positions in range if needed
+				if (oldPosition < newPosition) {
+					// Moving DOWN: Decrement all shows between oldPosition+1 and newPosition
+					await this.watchlistModel.decrement(
+						{ position: 1 },
+						{
+							where: {
+								position: {
+									[Sequelize.Op.between]: [oldPosition + 1, newPosition],
+								},
+							},
+							transaction: t,
+							lock: t.LOCK.EXCLUSIVE,
+						}
+					);
+				} else {
+					// Moving UP: Increment all shows between newPosition and oldPosition-1
 					await this.watchlistModel.increment(
 						{ position: 1 },
 						{
-							where: { position: { [Sequelize.Op.gte]: position } },
+							where: {
+								position: {
+									[Sequelize.Op.between]: [newPosition, oldPosition - 1],
+								},
+							},
 							transaction: t,
 							lock: t.LOCK.EXCLUSIVE,
 						}
@@ -417,27 +460,15 @@ class ClientManager {
 			await this.watchlistModel.update(
 				{
 					show_name: newShowName || showToUpdate.show_name,
-					season_number: season_number ?? showToUpdate.season_number,
-					episode_number: episode_number ?? showToUpdate.episode_number,
-					position: isPositionChanged ? position : oldPosition,
+					season_number: seasonNumber ?? showToUpdate.season_number,
+					episode_number: episodeNumber ?? showToUpdate.episode_number,
+					position: isPositionChanged ? newPosition : oldPosition,
 				},
 				{
 					where: { show_name: showName },
 					transaction: t,
 				}
 			);
-
-			// If the position changed, shift the old position down
-			if (isPositionChanged) {
-				await this.watchlistModel.decrement(
-					{ position: 1 },
-					{
-						where: { position: { [Sequelize.Op.gt]: oldPosition } },
-						transaction: t,
-						lock: t.LOCK.EXCLUSIVE,
-					}
-				);
-			}
 
 			// Commit transaction
 			await t.commit();
