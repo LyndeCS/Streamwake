@@ -366,120 +366,66 @@ class ClientManager {
 		}
 	}
 
-	async updateShowInWatchlist(
-		showName,
-		{ newShowName, seasonNumber, episodeNumber, newPosition }
-	) {
+	async updateShowInWatchlist(showName, updates) {
 		const t = await sequelize.transaction(); // Start a transaction
-		console.log("test");
+
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			// Find the existing show by name WITHIN the transaction
+			// Find the existing show by name
 			const showToUpdate = await this.watchlistModel.findOne({
 				where: { show_name: showName },
 				transaction: t,
-				lock: t.LOCK.EXCLUSIVE, // Row-level lock
+				lock: t.LOCK.EXCLUSIVE, // Lock the row
 			});
 
+			console.log(showToUpdate);
+
 			if (!showToUpdate) {
-				throw new Error(`No show found with name "${showName}".`);
+				throw new Error(`Show "${showName}" not found in watchlist.`);
 			}
 
-			const oldPosition = showToUpdate.position;
-			const isPositionChanged =
-				newPosition !== undefined && newPosition !== oldPosition;
+			// Extract previous and new position
+			const previousPosition = showToUpdate.position;
+			const newPosition = updates.position; // `position` is coming from the updates object
 
-			if (isPositionChanged) {
-				// Check if another show already occupies the new position
-				const conflictingShow = await this.watchlistModel.findOne({
-					where: { position: newPosition },
-					transaction: t,
-					lock: t.LOCK.EXCLUSIVE,
-				});
+			if (newPosition !== undefined && newPosition !== previousPosition) {
+				const [start, end, increment] =
+					newPosition > previousPosition
+						? [previousPosition + 1, newPosition, -1] // Move down → decrement conflicts
+						: [newPosition, previousPosition - 1, 1]; // Move up → increment conflicts
 
-				if (conflictingShow) {
-					if (oldPosition < newPosition) {
-						// Moving DOWN (to a higher position) → decrement conflicting show's position
-						await this.watchlistModel.decrement(
-							{ position: 1 },
-							{
-								where: { position: newPosition },
-								transaction: t,
-								lock: t.LOCK.EXCLUSIVE,
-							}
-						);
-					} else {
-						// Moving UP (to a lower position) → increment conflicting show's position
-						await this.watchlistModel.increment(
-							{ position: 1 },
-							{
-								where: { position: newPosition },
-								transaction: t,
-								lock: t.LOCK.EXCLUSIVE,
-							}
-						);
+				await this.watchlistModel.increment(
+					{ position: increment },
+					{
+						where: { position: { [Sequelize.Op.between]: [start, end] } },
+						transaction: t,
+						lock: t.LOCK.EXCLUSIVE,
 					}
-				}
+				);
 
-				// Shift positions in range if needed
-				if (oldPosition < newPosition) {
-					// Moving DOWN: Decrement all shows between oldPosition+1 and newPosition
-					await this.watchlistModel.decrement(
-						{ position: 1 },
-						{
-							where: {
-								position: {
-									[Sequelize.Op.between]: [oldPosition + 1, newPosition],
-								},
-							},
-							transaction: t,
-							lock: t.LOCK.EXCLUSIVE,
-						}
-					);
-				} else {
-					// Moving UP: Increment all shows between newPosition and oldPosition-1
-					await this.watchlistModel.increment(
-						{ position: 1 },
-						{
-							where: {
-								position: {
-									[Sequelize.Op.between]: [newPosition, oldPosition - 1],
-								},
-							},
-							transaction: t,
-							lock: t.LOCK.EXCLUSIVE,
-						}
-					);
-				}
+				updates.position = newPosition; // Ensure `position` gets updated
 			}
 
-			// Update the show WITHIN the transaction
-			await this.watchlistModel.update(
-				{
-					show_name: newShowName || showToUpdate.show_name,
-					season_number: seasonNumber ?? showToUpdate.season_number,
-					episode_number: episodeNumber ?? showToUpdate.episode_number,
-					position: isPositionChanged ? newPosition : oldPosition,
-				},
-				{
-					where: { show_name: showName },
-					transaction: t,
-				}
-			);
+			// Apply updates while ensuring we only update provided fields
+			const updatedFields = { ...showToUpdate.get(), ...updates };
+
+			console.log(updatedFields);
+
+			await showToUpdate.update(updatedFields, { transaction: t });
 
 			// Commit transaction
 			await t.commit();
 
-			// Update local cache
+			// Refresh local cache
 			this.loadWatchlist();
 
-			console.log(`Updated "${showName}" in the watchlist.`);
+			console.log(`Updated "${showName}" in watchlist.`);
 			return true;
 		} catch (error) {
-			await t.rollback(); // Rollback the transaction on error
+			await t.rollback(); // Rollback transaction on error
 			console.error("Error updating show in watchlist:", error);
 			throw error;
 		}

@@ -216,22 +216,22 @@ module.exports = {
 			// UPDATE
 			update: async () => {
 				// Retrieve options from the interaction
-				const show_name = interaction.options.getString("show");
-				const season_number = interaction.options.getInteger("season");
-				const episode_number = interaction.options.getInteger("episode");
-				const position = interaction.options.getInteger("position");
+				const showName = interaction.options.getString("show");
+				const seasonNumber = interaction.options.getInteger("season");
+				const episodeNumber = interaction.options.getInteger("episode");
+				const newPosition = interaction.options.getInteger("position");
 
 				// Proceed with updating the show in the watchlist
 				try {
 					// Check if show exists in the cached watchlist
 					const show = clientManager
 						.getWatchlist()
-						.find((item) => item.show_name === show_name);
+						.find((item) => item.show_name === showName);
 
 					if (!show) {
 						// If the show doesn't exist
 						await interaction.reply({
-							content: `The show "${show_name}" does not exist in the watchlist.`,
+							content: `The show "${showName}" does not exist in the watchlist.`,
 							ephemeral: true,
 						});
 						return;
@@ -239,27 +239,32 @@ module.exports = {
 
 					// Update the show in the database and cache
 					const updateResult = await clientManager.updateShowInWatchlist(
-						show_name,
-						{ show_name, season_number, episode_number, position }
+						showName,
+						{
+							show_name: showName || show.show_name,
+							season_number: seasonNumber || show.season_number,
+							episode_number: episodeNumber || show.episode_number,
+							position: newPosition || show.position,
+						}
 					);
 
 					if (updateResult) {
 						// Successfully updated
 						const updatedShow = clientManager
 							.getWatchlist()
-							.find((item) => item.show_name === show_name);
+							.find((item) => item.show_name === showName);
 						await interaction.reply({
-							content: `Successfully updated "${show_name}" to ${
-								season_number ? "Season: " + season_number + ", " : ""
-							} ${episode_number ? "Episode: " + episode_number + ", " : ""} ${
-								position ? "Position: " + position : ""
+							content: `Successfully updated "${showName}" to ${
+								seasonNumber ? "Season: " + seasonNumber + ", " : ""
+							} ${episodeNumber ? "Episode: " + episodeNumber + ", " : ""} ${
+								newPosition ? "Position: " + newPosition : ""
 							}.`,
 							ephemeral: true,
 						});
 					} else {
 						// If update failed
 						await interaction.reply({
-							content: `Failed to update the show "${show_name}". Please check if the details are correct.`,
+							content: `Failed to update the show "${showName}". Please check if the details are correct.`,
 							ephemeral: true,
 						});
 					}
