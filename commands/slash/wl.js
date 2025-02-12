@@ -122,8 +122,10 @@ module.exports = {
 				const seasonNumber = interaction.options.getInteger("season") || 1;
 				const episodeNumber = interaction.options.getInteger("episode") || 1;
 				const watchlist = clientManager.getWatchlist();
+				const MAX_POSITION = watchlist.length + 1;
 				const position =
-					interaction.options.getInteger("position") || watchlist.length + 1;
+					Math.min(interaction.options.getInteger("position"), MAX_POSITION) ||
+					MAX_POSITION;
 
 				try {
 					const newShow = await clientManager.addShowToWatchlist({
@@ -220,13 +222,13 @@ module.exports = {
 				const seasonNumber = interaction.options.getInteger("season");
 				const episodeNumber = interaction.options.getInteger("episode");
 				const newPosition = interaction.options.getInteger("position");
+				const watchlist = clientManager.getWatchlist();
+				const MAX_POSITION = watchlist.length;
 
 				// Proceed with updating the show in the watchlist
 				try {
 					// Check if show exists in the cached watchlist
-					const show = clientManager
-						.getWatchlist()
-						.find((item) => item.show_name === showName);
+					const show = watchlist.find((item) => item.show_name === showName);
 
 					if (!show) {
 						// If the show doesn't exist
@@ -244,21 +246,19 @@ module.exports = {
 							show_name: showName || show.show_name,
 							season_number: seasonNumber || show.season_number,
 							episode_number: episodeNumber || show.episode_number,
-							position: newPosition || show.position,
+							position:
+								Math.min(Math.max(newPosition, 1), MAX_POSITION) ||
+								show.position,
 						}
 					);
 
 					if (updateResult) {
 						// Successfully updated
-						const updatedShow = clientManager
-							.getWatchlist()
-							.find((item) => item.show_name === showName);
+						const updatedShow = watchlist.find(
+							(item) => item.show_name === showName
+						);
 						await interaction.reply({
-							content: `Successfully updated "${showName}" to ${
-								seasonNumber ? "Season: " + seasonNumber + ", " : ""
-							} ${episodeNumber ? "Episode: " + episodeNumber + ", " : ""} ${
-								newPosition ? "Position: " + newPosition : ""
-							}.`,
+							content: `Successfully updated "${showName}".`,
 							ephemeral: true,
 						});
 					} else {
