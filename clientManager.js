@@ -1,4 +1,5 @@
-const sequelize = require("./db");
+const { sequelize, Sequelize } = require("./models");
+const Op = Sequelize.Op;
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -257,103 +258,176 @@ class ClientManager {
 		show_name,
 		season_number = 1,
 		episode_number = 1,
+		position,
 	}) {
+		const t = await sequelize.transaction(); // Start a transaction
+
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			const createdShow = await this.watchlistModel.create({
-				show_name,
-				season_number,
-				episode_number,
+			// Check if the position is already taken WITHIN the transaction
+			const existingShow = await this.watchlistModel.findOne({
+				where: { position },
+				transaction: t, // Use the transaction
+				lock: t.LOCK.EXCLUSIVE, // Row-level lock
 			});
-			this.watchlist.push({
-				show_name: createdShow.show_name,
-				season_number: createdShow.season_number,
-				episode_number: createdShow.episode_number,
-			});
+
+			if (existingShow) {
+				// Shift positions WITHIN the transaction
+				await this.watchlistModel.increment(
+					{ position: 1 },
+					{
+						where: { position: { [Sequelize.Op.gte]: position } },
+						transaction: t,
+						lock: t.LOCK.EXCLUSIVE, // Lock affected rows
+					}
+				);
+			}
+
+			// Insert new show WITHIN the transaction
+			const createdShow = await this.watchlistModel.create(
+				{
+					show_name,
+					season_number,
+					episode_number,
+					position,
+				},
+				{ transaction: t }
+			);
+
+			// Commit transaction
+			await t.commit();
+
+			// Update local cache
+			this.loadWatchlist();
+
 			console.log(
 				`Added "${show_name}" (Season ${season_number}, Episode ${episode_number}) to watchlist.`
 			);
 			return createdShow;
 		} catch (error) {
+			await t.rollback(); // Rollback the transaction on error
 			console.error("Error adding show to watchlist:", error);
 			throw error;
 		}
 	}
 
 	async removeShowFromWatchlist(showName) {
+		const t = await sequelize.transaction(); // Start a transaction
+
 		try {
 			if (!this.watchlistModel) {
 				throw new Error("Watchlist model is not set.");
 			}
 
-			const deletedCount = await this.watchlistModel.destroy({
+			// Find the show by name WITHIN the transaction
+			const showToRemove = await this.watchlistModel.findOne({
 				where: { show_name: showName },
+				transaction: t,
+				lock: t.LOCK.EXCLUSIVE, // Row-level lock
 			});
 
-			if (deletedCount === 0) {
-				console.log(`Show "${showName}" not found in the database.`);
-				return false;
+			if (!showToRemove) {
+				throw new Error(`No show found with name "${showName}".`);
 			}
 
-			this.watchlist = this.watchlist.filter(
-				(item) => item.show_name !== showName
+			const { position } = showToRemove;
+
+			// Remove the show WITHIN the transaction
+			await this.watchlistModel.destroy({
+				where: { show_name: showName },
+				transaction: t,
+			});
+
+			// Shift remaining shows UP by decrementing their position
+			await this.watchlistModel.decrement(
+				{ position: 1 },
+				{
+					where: { position: { [Sequelize.Op.gt]: position } },
+					transaction: t,
+					lock: t.LOCK.EXCLUSIVE, // Lock affected rows
+				}
 			);
-			console.log(`Removed "${showName}" from watchlist.`);
+
+			// Commit transaction
+			await t.commit();
+
+			// Update local cache
+			this.loadWatchlist();
+
+			console.log(`Removed "${showName}" and adjusted positions.`);
 			return true;
 		} catch (error) {
+			await t.rollback(); // Rollback the transaction on error
 			console.error("Error removing show from watchlist:", error);
 			throw error;
 		}
 	}
 
-	async updateShowInWatchlist(showName, { season_number, episode_number }) {
+	async updateShowInWatchlist(showName, updates) {
+		const t = await sequelize.transaction(); // Start a transaction
+
 		try {
-			// Find the show in the database
-			const show = await this.watchlistModel.findOne({
+			if (!this.watchlistModel) {
+				throw new Error("Watchlist model is not set.");
+			}
+
+			// Find the existing show by name
+			const showToUpdate = await this.watchlistModel.findOne({
 				where: { show_name: showName },
+				transaction: t,
+				lock: t.LOCK.EXCLUSIVE, // Lock the row
 			});
 
-			// If the show doesn't exist, return an error
-			if (!show) {
-				console.error(`Show "${showName}" not found in the watchlist.`);
-				return {
-					success: false,
-					message: `Show "${showName}" not found in the watchlist.`,
-				};
+			console.log(showToUpdate);
+
+			if (!showToUpdate) {
+				throw new Error(`Show "${showName}" not found in watchlist.`);
 			}
 
-			// Update the season and episode numbers if provided
-			if (season_number !== undefined) show.season_number = season_number;
-			if (episode_number !== undefined) show.episode_number = episode_number;
+			// Extract previous and new position
+			const previousPosition = showToUpdate.position;
+			const newPosition = updates.position; // `position` is coming from the updates object
 
-			// Save the changes to the database
-			await show.save();
+			if (newPosition !== undefined && newPosition !== previousPosition) {
+				const [start, end, increment] =
+					newPosition > previousPosition
+						? [previousPosition + 1, newPosition, -1] // Move down → decrement conflicts
+						: [newPosition, previousPosition - 1, 1]; // Move up → increment conflicts
 
-			// Update the cached watchlist
-			const cachedIndex = this.watchlist.findIndex(
-				(item) => item.show_name === showName
-			);
-			if (cachedIndex !== -1) {
-				if (season_number !== undefined)
-					this.watchlist[cachedIndex].season_number = season_number;
-				if (episode_number !== undefined)
-					this.watchlist[cachedIndex].episode_number = episode_number;
+				await this.watchlistModel.increment(
+					{ position: increment },
+					{
+						where: { position: { [Sequelize.Op.between]: [start, end] } },
+						transaction: t,
+						lock: t.LOCK.EXCLUSIVE,
+					}
+				);
+
+				updates.position = newPosition; // Ensure `position` gets updated
 			}
 
-			console.log(`Show "${showName}" updated successfully.`);
-			return {
-				success: true,
-				message: `Show "${showName}" updated successfully.`,
-			};
+			// Apply updates while ensuring we only update provided fields
+			const updatedFields = { ...showToUpdate.get(), ...updates };
+
+			console.log(updatedFields);
+
+			await showToUpdate.update(updatedFields, { transaction: t });
+
+			// Commit transaction
+			await t.commit();
+
+			// Refresh local cache
+			this.loadWatchlist();
+
+			console.log(`Updated "${showName}" in watchlist.`);
+			return true;
 		} catch (error) {
+			await t.rollback(); // Rollback transaction on error
 			console.error("Error updating show in watchlist:", error);
-			return {
-				success: false,
-				message: "An error occurred while updating the show.",
-			};
+			throw error;
 		}
 	}
 }

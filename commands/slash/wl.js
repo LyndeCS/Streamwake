@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("wl")
 		.setDescription("Manage the watchlist")
-		// add subcommand
+		// ADD
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("add")
@@ -30,8 +30,15 @@ module.exports = {
 						.setDescription("Episode number")
 						.setRequired(false)
 				)
+				.addIntegerOption((option) =>
+					option
+						.setName("position")
+						.setDescription("Position in the watchlist")
+						.setRequired(false)
+						.setMinValue(1)
+				)
 		)
-		// remove subcommand
+		// REMOVE
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("remove")
@@ -44,7 +51,7 @@ module.exports = {
 						.setAutocomplete(true)
 				)
 		)
-		// update subcommand
+		// UPDATE
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("update")
@@ -60,16 +67,23 @@ module.exports = {
 					option
 						.setName("season")
 						.setDescription("New season number")
-						.setRequired(true)
+						.setRequired(false)
 				)
 				.addIntegerOption((option) =>
 					option
 						.setName("episode")
 						.setDescription("New episode number")
-						.setRequired(true)
+						.setRequired(false)
+				)
+				.addIntegerOption((option) =>
+					option
+						.setName("position")
+						.setDescription("Position in the watchlist")
+						.setRequired(false)
+						.setMinValue(1)
 				)
 		)
-		// show subcommand
+		// SHOW
 		.addSubcommand((subcommand) =>
 			subcommand.setName("show").setDescription("View the current watchlist")
 		),
@@ -102,17 +116,21 @@ module.exports = {
 	},
 	async execute(interaction) {
 		const subcommandHandlers = {
-			// 'add' subcommand handler
+			// ADD
 			add: async () => {
 				const showName = interaction.options.getString("show");
 				const seasonNumber = interaction.options.getInteger("season") || 1;
 				const episodeNumber = interaction.options.getInteger("episode") || 1;
+				const watchlist = clientManager.getWatchlist();
+				const position =
+					interaction.options.getInteger("position") || watchlist.length + 1;
 
 				try {
 					const newShow = await clientManager.addShowToWatchlist({
 						show_name: showName,
 						season_number: seasonNumber,
 						episode_number: episodeNumber,
+						position: position,
 					});
 
 					await interaction.reply({
@@ -127,7 +145,7 @@ module.exports = {
 					});
 				}
 			},
-			// 'remove' subcommand handler
+			// REMOVE
 			remove: async () => {
 				const showName = interaction.options.getString("show");
 
@@ -152,7 +170,7 @@ module.exports = {
 					});
 				}
 			},
-			// 'show' subcommand handler
+			// SHOW
 			show: async () => {
 				const sortedWatchlist = clientManager
 					.getWatchlist()
@@ -195,23 +213,25 @@ module.exports = {
 
 				await interaction.reply({ content: output, ephemeral: true });
 			},
+			// UPDATE
 			update: async () => {
 				// Retrieve options from the interaction
-				const show_name = interaction.options.getString("show");
-				const season_number = interaction.options.getInteger("season");
-				const episode_number = interaction.options.getInteger("episode");
+				const showName = interaction.options.getString("show");
+				const seasonNumber = interaction.options.getInteger("season");
+				const episodeNumber = interaction.options.getInteger("episode");
+				const newPosition = interaction.options.getInteger("position");
 
 				// Proceed with updating the show in the watchlist
 				try {
 					// Check if show exists in the cached watchlist
 					const show = clientManager
 						.getWatchlist()
-						.find((item) => item.show_name === show_name);
+						.find((item) => item.show_name === showName);
 
 					if (!show) {
 						// If the show doesn't exist
 						await interaction.reply({
-							content: `The show "${show_name}" does not exist in the watchlist.`,
+							content: `The show "${showName}" does not exist in the watchlist.`,
 							ephemeral: true,
 						});
 						return;
@@ -219,23 +239,32 @@ module.exports = {
 
 					// Update the show in the database and cache
 					const updateResult = await clientManager.updateShowInWatchlist(
-						show_name,
-						{ season_number, episode_number }
+						showName,
+						{
+							show_name: showName || show.show_name,
+							season_number: seasonNumber || show.season_number,
+							episode_number: episodeNumber || show.episode_number,
+							position: newPosition || show.position,
+						}
 					);
 
-					if (updateResult.success) {
+					if (updateResult) {
 						// Successfully updated
 						const updatedShow = clientManager
 							.getWatchlist()
-							.find((item) => item.show_name === show_name);
+							.find((item) => item.show_name === showName);
 						await interaction.reply({
-							content: `Successfully updated "${show_name}" to Season ${updatedShow.season_number}, Episode ${updatedShow.episode_number}.`,
+							content: `Successfully updated "${showName}" to ${
+								seasonNumber ? "Season: " + seasonNumber + ", " : ""
+							} ${episodeNumber ? "Episode: " + episodeNumber + ", " : ""} ${
+								newPosition ? "Position: " + newPosition : ""
+							}.`,
 							ephemeral: true,
 						});
 					} else {
 						// If update failed
 						await interaction.reply({
-							content: `Failed to update the show "${show_name}". Please check if the details are correct.`,
+							content: `Failed to update the show "${showName}". Please check if the details are correct.`,
 							ephemeral: true,
 						});
 					}

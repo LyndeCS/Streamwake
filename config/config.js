@@ -3,20 +3,23 @@ require("dotenv").config({
 });
 
 module.exports = {
-	development: {
-		username: process.env.TEMP_DB_USER,
-		password: process.env.TEMP_DB_PW,
-		database: process.env.TEMP_DB_NAME,
-		host: process.env.HOST,
-		dialect: "mysql",
+	// Bot configuration
+	bot: {
+		token: process.env.BOT_TOKEN,
+		clientId: process.env.CLIENT_ID,
+		guildId: process.env.GUILD_ID,
+		adminArray: process.env.ADMIN_ARRAY.split(","),
+		moderatorArray: process.env.MODERATOR_ARRAY.split(","),
 	},
-	production: {
-		username: process.env.TEMP_DB_USER,
-		password: process.env.TEMP_DB_PW,
-		database: process.env.TEMP_DB_NAME,
-		host: process.env.HOST,
-		dialect: "mysql",
-		// For production, you might also want to configure:
-		// "pool": { "max": 5, "min": 0, "acquire": 30000, "idle": 10000 } // Connection pooling
+
+	// Database configuration
+	db: {
+		username: process.env.DB_USER,
+		password: process.env.DB_PW,
+		database: process.env.DB_NAME,
+		host: process.env.DB_HOST,
+		dialect: process.env.DB_DIALECT,
+		// Connection pooling settings for production
+		// pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
 	},
 };
