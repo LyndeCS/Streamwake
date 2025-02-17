@@ -246,9 +246,9 @@ module.exports = {
 							show_name: showName || show.show_name,
 							season_number: seasonNumber || show.season_number,
 							episode_number: episodeNumber || show.episode_number,
-							position:
-								Math.min(Math.max(newPosition, 1), MAX_POSITION) ||
-								show.position,
+							position: newPosition
+								? Math.min(Math.max(newPosition, 1), MAX_POSITION)
+								: show.position,
 						}
 					);
 
