@@ -1,6 +1,5 @@
 const cron = require("node-cron");
-const db = require("../models");
-const Watchlist = db.Watchlist;
+const { Watchlist, sequelize } = require("../models");
 const client = require("../clientManager");
 
 async function incrementEpisodeNumbers() {
@@ -29,6 +28,10 @@ async function decrementEpisodeNumbers() {
 
 // Schedule the task to run every Sunday at 3AM
 cron.schedule("0 3 * * 0", async () => {
-	await incrementEpisodeNumbers();
-	client.loadWatchlist();
+	try {
+		await incrementEpisodeNumbers();
+		client.loadWatchlist();
+	} catch (error) {
+		console.error("Error incrementing episode numbers:", error);
+	}
 });
