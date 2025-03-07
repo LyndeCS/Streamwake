@@ -4,7 +4,7 @@ const client = clientManager.getClient();
 const fs = require("fs");
 const path = require("path");
 const admins = process.env.ADMIN_ARRAY;
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,7 +14,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -44,7 +44,7 @@ module.exports = {
 
 		await interaction.reply({
 			content: `Logged: ${new Date().toLocaleString()}: ${show} ${episode}.\n`,
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };

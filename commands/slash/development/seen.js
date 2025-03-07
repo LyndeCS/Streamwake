@@ -1,7 +1,7 @@
 require("dotenv").config();
 const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { User, Episode, UserEpisode, Show, Season } = require("../../../models");
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
 	async execute(interaction) {
 		const reply = await interaction.reply({
 			content: "suggesting",
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 		reply.delete();
 	},

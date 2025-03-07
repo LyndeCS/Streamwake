@@ -1,7 +1,7 @@
 require("dotenv").config();
 const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const admins = process.env.ADMIN_ARRAY;
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -46,13 +46,13 @@ module.exports = {
 				}
 				await interaction.reply({
 					content: `Removed ${removedShowName}.`,
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 				// user entered invalid position to remove
 			} else {
 				await interaction.reply({
 					content: `Invalid position entered.`,
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			}
 			// remove show from suggestions
@@ -70,12 +70,12 @@ module.exports = {
 				}
 				await interaction.reply({
 					content: `Removed ${removedShowName}.`,
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			} else {
 				await interaction.reply({
 					content: `Invalid position entered.`,
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			}
 		}

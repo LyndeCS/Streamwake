@@ -2,7 +2,11 @@ require("dotenv").config();
 const clientManager = require("../../clientManager");
 const client = clientManager.getClient();
 const admins = process.env.ADMIN_ARRAY;
-const { SlashCommandBuilder, ChannelType } = require("discord.js");
+const {
+	SlashCommandBuilder,
+	ChannelType,
+	MessageFlags,
+} = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,7 +23,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -40,7 +44,7 @@ module.exports = {
 		// Optionally, you can send a message to indicate that the operation is complete
 		const reply = await interaction.reply({
 			content: `Deleted ${messagesToDelete.size} messages.`,
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 		reply.delete(); // Delete the confirmation message after 5 seconds
 	},

@@ -8,6 +8,7 @@ const {
 	ButtonStyle,
 	EmbedBuilder,
 	SlashCommandBuilder,
+	MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -26,7 +27,7 @@ module.exports = {
 		if (!client.watchList.length) {
 			await interaction.reply({
 				content: "Watchlist is empty.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -82,7 +83,7 @@ module.exports = {
 
 		const reply = await interaction.reply({
 			content: "Loading player...",
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 		await reply.delete();
 

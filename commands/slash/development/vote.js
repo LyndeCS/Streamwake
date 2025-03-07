@@ -7,6 +7,7 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
+	MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -41,7 +42,7 @@ module.exports = {
 		if (!client.suggestedShowsList.find((show) => show.showName === showName)) {
 			const reply = await interaction.reply({
 				content: "Show is not on suggestion list.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			setTimeout(() => reply.delete(), 2000);
 			return;
@@ -66,7 +67,7 @@ module.exports = {
 			// respond
 			const reply = await interaction.reply({
 				content: `Voting for ${showName}.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			setTimeout(() => reply.delete(), 2000);
 			return;
@@ -94,7 +95,7 @@ module.exports = {
 					content:
 						"You have already voted for this show. Would you like to remove your vote?",
 					components: [buttonRow],
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				})
 				.then((msg) => {
 					const timer = setTimeout(() => msg.delete(), 10_000);

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const clientManager = require("../../clientManager");
 const { format, nextSaturday } = require("date-fns");
 
@@ -137,13 +137,13 @@ module.exports = {
 
 					await interaction.reply({
 						content: `"${newShow.show_name}" has been added to the watchlist.`,
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				} catch (error) {
 					console.error("Error adding show to watchlist:", error);
 					await interaction.reply({
 						content: "There was an error adding the show to the watchlist.",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			},
@@ -156,19 +156,19 @@ module.exports = {
 					if (removed) {
 						await interaction.reply({
 							content: `"${showName}" has been removed from the watchlist.`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 					} else {
 						await interaction.reply({
 							content: `"${showName}" was not found in the watchlist.`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 					}
 				} catch (error) {
 					console.error("Error removing show from watchlist:", error);
 					await interaction.reply({
 						content: "There was an error removing the show from the watchlist.",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			},
@@ -213,7 +213,10 @@ module.exports = {
 					responseText += `${item.position}. ${item.show_name}: s${item.season_number} e${item.episode_number}\n`;
 				});
 
-				await interaction.reply({ content: output, ephemeral: true });
+				await interaction.reply({
+					content: output,
+					flags: MessageFlags.Ephemeral,
+				});
 			},
 			// UPDATE
 			update: async () => {
@@ -234,7 +237,7 @@ module.exports = {
 						// If the show doesn't exist
 						await interaction.reply({
 							content: `The show "${showName}" does not exist in the watchlist.`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 						return;
 					}
@@ -259,13 +262,13 @@ module.exports = {
 						);
 						await interaction.reply({
 							content: `Successfully updated "${showName}".`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 					} else {
 						// If update failed
 						await interaction.reply({
 							content: `Failed to update the show "${showName}". Please check if the details are correct.`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 					}
 				} catch (error) {
@@ -273,7 +276,7 @@ module.exports = {
 					await interaction.reply({
 						content:
 							"An error occurred while updating the watchlist. Please try again later.",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			},
@@ -288,7 +291,7 @@ module.exports = {
 		} else {
 			await interaction.reply({
 				content: "Unknown subcommand!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	},

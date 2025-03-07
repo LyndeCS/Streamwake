@@ -1,7 +1,7 @@
 require("dotenv").config();
 const clientManager = require("../../../clientManager");
 const client = clientManager.getClient();
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const admins = process.env.ADMIN_ARRAY;
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

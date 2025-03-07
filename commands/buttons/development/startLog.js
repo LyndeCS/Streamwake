@@ -4,7 +4,7 @@ const client = clientManager.getClient();
 const fs = require("fs");
 const path = require("path");
 const admins = process.env.ADMIN_ARRAY;
-const { SlashCommandBuilder, Collection } = require("discord.js");
+const { SlashCommandBuilder, Collection, MessageFlags } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,7 +14,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -22,7 +22,7 @@ module.exports = {
 		if (!interaction.member.voice.channelId) {
 			await interaction.reply({
 				content: "You are not in a voice channel.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -72,12 +72,12 @@ module.exports = {
 
 			await interaction.reply({
 				content: `Logging started in ${channelName}.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		} else {
 			await interaction.reply({
 				content: `Logging is already active in ${channelName}.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	},

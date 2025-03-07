@@ -8,6 +8,7 @@ const {
 	StringSelectMenuOptionBuilder,
 	ActionRowBuilder,
 	SlashCommandBuilder,
+	MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -19,14 +20,14 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You do not have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 		if (client.suggestedShowsList.length < 1) {
 			const reply = await interaction.reply({
 				content: "Suggested shows list is empty.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			await wait(3000);
 			await reply.delete();

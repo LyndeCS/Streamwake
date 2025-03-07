@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, MessageFlags } = require("discord.js");
 const clientManager = require("../clientManager");
 const client = clientManager.getClient();
 const config = require("../config/config.js");
@@ -32,7 +32,7 @@ module.exports = {
 			} else {
 				await interaction.reply({
 					content: "You need admin permissions to use this command.",
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			}
 			return;
@@ -49,7 +49,7 @@ module.exports = {
 			} else {
 				await interaction.reply({
 					content: "You need moderator permissions to use this command.",
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			}
 			return;
@@ -71,12 +71,12 @@ module.exports = {
 				if (interaction.replied || interaction.deferred) {
 					await interaction.followUp({
 						content: "There was an error while executing this command!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				} else {
 					await interaction.reply({
 						content: "There was an error while executing this command!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			}

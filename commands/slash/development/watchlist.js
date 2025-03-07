@@ -8,6 +8,7 @@ const {
 	ButtonStyle,
 	EmbedBuilder,
 	SlashCommandBuilder,
+	MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

@@ -2,7 +2,7 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const admins = process.env.ADMIN_ARRAY;
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ module.exports = {
 		if (!admins.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "You don't have permission to use this command.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -22,7 +22,7 @@ module.exports = {
 		if (!interaction.member.voice.channelId) {
 			await interaction.reply({
 				content: "You are not in a voice channel.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -36,7 +36,7 @@ module.exports = {
 		if (!interaction.client.loggingStates.has(guildId)) {
 			await interaction.reply({
 				content: "Logging is not active in this guild.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -46,7 +46,7 @@ module.exports = {
 		if (!channelStates.has(channelId)) {
 			await interaction.reply({
 				content: `Logging is currently inactive in ${channelName}.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		} else {
 			channelStates.set(channelId, false);
@@ -71,7 +71,7 @@ module.exports = {
 
 			await interaction.reply({
 				content: `Logging stopped in ${channelName}.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	},
